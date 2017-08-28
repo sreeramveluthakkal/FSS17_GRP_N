@@ -8,6 +8,6 @@
 `python a.py`
 
 ### Team
-Aswin Anil Kumar
-Seyedsamim Mirhosseini Ghamsari
+Aswin Anil Kumar,  
+Seyedsamim Mirhosseini Ghamsari,  
 Sreeram Veluthakkal
