@@ -2,7 +2,12 @@
 ## HW1 Reading CSV files
 
 ### Dependencies
-Python 2.7
+`Python 2.7`
 
 ### Building
-python a.py
+`python a.py`
+
+### Team
+Aswin Anil Kumar
+Seyedsamim Mirhosseini Ghamsari
+Sreeram Veluthakkal
