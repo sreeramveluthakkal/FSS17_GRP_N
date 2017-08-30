@@ -28,6 +28,11 @@ def clean (str):
     str = str.replace(' ', '') # remove spaces
     return str
 
+def cleanHeader (str):
+    str = clean(str)
+    str = re.sub(r'[<>$?]+', '', str)
+    return str
+
 def parse (filename):
     lineNumber = 0 # line count
     headers = [] # list of dictionaries to keep track of flags
@@ -61,10 +66,13 @@ def parse (filename):
                         headers[h]["ignore"] = False
 
                         # Checking NUM/SYM --> We only check if not '?'
-                        if lineList[h][0] == '>' or lineList[h][0] == '<' or  lineList[h][0] == '$':
+                        if lineList[h][0] == '>' or lineList[h][0] == '<' or  lineList[h][0] == '$' or lineList[h][0] == '<$' or lineList[h][0] == '>$':
                             headers[h]["typeof"] = 'NUM'  
                         else: # includes '!', right?
                             headers[h]["typeof"] = 'SYM'
+                    
+                    headers[h]["name"] = cleanHeader(lineList[h])
+
                 lineNumber += 1
                 continue # Not adding to data list
 
@@ -86,8 +94,8 @@ def parse (filename):
 # Running the parser
 start_time = time.time()
 
-lineCount = parse('POM3a.csv')['fileLineCount'] + 1
-print 'Number of lines read:', lineCount
+lineCount = len(parse('POM3a.csv')['data'])
+print 'Number of lines of valid data:', lineCount
 # print parse('test.csv')['data']
 
 print("--- %s seconds ---" % (time.time() - start_time))
