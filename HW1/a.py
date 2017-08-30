@@ -69,12 +69,12 @@ def parse (filename):
                 continue # Not adding to data list
 
             if len(lineList) != nCol: # Checking number of columns
-                print 'err on line:', lineNumber, lineList
+                print 'err: bad line:', lineNumber #, lineList
             else:
                 failed = False
                 for h in xrange(len(headers)):
                     if headers[h]['typeof'] == 'NUM' and not (isfloat(lineList[h]) or isint(lineList[h])):
-                        print 'err on line:', lineNumber, lineList
+                        print 'err: unexpected data found in line:', lineNumber #, lineList
                         failed = True
                 if not failed:
                     data.append(lineList)
@@ -86,7 +86,8 @@ def parse (filename):
 # Running the parser
 start_time = time.time()
 
-print parse('POM3a.csv')['fileLineCount']
+lineCount = parse('POM3a.csv')['fileLineCount'] + 1
+print 'Number of lines read:', lineCount
 # print parse('test.csv')['data']
 
 print("--- %s seconds ---" % (time.time() - start_time))
