@@ -32,10 +32,25 @@ def cleanHeader (str):
     str = re.sub(r'[<>$?]+', '', str)
     return str
 
+def calculateSD(header, x):
+    mu = header["mu"]
+    m2 = header["m2"]
+    n = header["count"]
+    sd = header["sd"]
+    delta = x - mu
+    mu = mu + delta/n
+    m2 = m2 + delta*(x- mu)
+    if n > 1:
+        sd = (m2/(n-1))**0.5
+    return sd, mu, m2
 
 def updateHeaders(line_list, headers):
     for idx, val in enumerate(line_list):
         if headers[idx]["typeof"] == "NUM":
+            if "count" in headers[idx]:
+                headers[idx]["count"] = headers[idx]["count"]+1
+            else:
+                headers[idx]["count"] = 1
             if "min" in headers[idx]:
                 headers[idx]["min"] = min(headers[idx]["min"], val)
             else:
@@ -44,12 +59,23 @@ def updateHeaders(line_list, headers):
                 headers[idx]["max"] = max(headers[idx]["min"], val)
             else:
                 headers[idx]["max"] = val
+            if "sd" in headers[idx]:
+                headers[idx]["sd"],headers[idx]["mu"],headers[idx]["m2"] = calculateSD(headers[idx], float(val))
+            else:
+                headers[idx]["sd"] = 0
+                headers[idx]["mu"] = 0
+                headers[idx]["m2"] = 0
+                headers[idx]["sd"],headers[idx]["mu"],headers[idx]["m2"]  = calculateSD(headers[idx], float(val))
         else:
-             headers[idx]["typeof"] == "SYM"
+            if "fmap" in headers[idx]:
+                headers[idx]["fmap"][val] = headers[idx]["fmap"].get(val,0)+1
+            else:
+                headers[idx]["fmap"] = {}
 
 
+                
 
-
+            
 
 
 def parse (filename):
@@ -114,7 +140,7 @@ def parse (filename):
 # Running the parser
 start_time = time.time()
 
-lineCount = len(parse('test.csv')['data'])
+lineCount = len(parse('auto.csv')['data'])
 print 'Number of lines of valid data:', lineCount
 # print parse('test.csv')['data']
 
