@@ -46,11 +46,11 @@ def calculateSD(header, x):
 
 def updateHeaders(line_list, headers):
     for idx, val in enumerate(line_list):
-        if headers[idx]["typeof"] == "NUM":
-            if "count" in headers[idx]:
+        if "count" in headers[idx]:
                 headers[idx]["count"] = headers[idx]["count"]+1
-            else:
-                headers[idx]["count"] = 1
+        else:
+            headers[idx]["count"] = 1
+        if headers[idx]["typeof"] == "NUM":
             if "min" in headers[idx]:
                 headers[idx]["min"] = min(headers[idx]["min"], val)
             else:
@@ -69,8 +69,17 @@ def updateHeaders(line_list, headers):
         else:
             if "fmap" in headers[idx]:
                 headers[idx]["fmap"][val] = headers[idx]["fmap"].get(val,0)+1
+                print "freq for "+val+" is "+str(headers[idx]["fmap"][val])
             else:
                 headers[idx]["fmap"] = {}
+                headers[idx]["fmap"][val] = 1;
+            if "most" in headers[idx]:
+                seen = headers[idx]["fmap"][val]
+                if(seen>headers[idx]["most"]):
+                    headers[idx]["most"] = seen;
+                    headers[idx]["mode"] = val;
+            else:
+                headers[idx]["most"] = headers[idx]["fmap"].get(val,0);
 
 
                 
