@@ -1,6 +1,6 @@
 import re
 import time
-
+import sys
 
 # Helper functions:====================
 # https://stackoverflow.com/a/15357477
@@ -90,13 +90,28 @@ def parse (filename):
             
     return {'headers': headers, 'data': data, 'fileLineCount': lineNumber}
 
+if len(sys.argv) < 2:
+    print 'Usage: python a.py <filename>'
+    exit(1)
 
-# Running the parser
-start_time = time.time()
+else:
+    # Running the parser
+    start_time = time.time()
 
-lineCount = len(parse('POM3a.csv')['data'])
-print 'Number of lines of valid data:', lineCount
-# print parse('test.csv')['data']
+    results = parse(sys.argv[1])
+    data = results['data']
+    headers = results['headers']
+    lineCount = len(data)
+    print 'Number of lines of valid data:', lineCount
 
-print("--- %s seconds ---" % (time.time() - start_time))
+
+    print("--- %s seconds ---" % (time.time() - start_time))
+
+    f = open('output.txt', 'w')
+    for header in headers:
+        f.write(header["name"] + ',')
+    for row in data:
+        f.write(str(row) + '\n')
+    f.close()
+    print 'Please see output.txt in current directory for the valid read data.'
 

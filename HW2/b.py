@@ -96,7 +96,7 @@ def dominate(i, j, headers, n):
     while index < len(headers):
         if(headers[index]["goal"]==True):
             weight = headers[index]["weight"]
-            print "I=",i[index],",J=",j[index],"MIN=",float(headers[index]["min"]),",MAX=",float(headers[index]["max"])
+            #print "I=",i[index],",J=",j[index],"MIN=",float(headers[index]["min"]),",MAX=",float(headers[index]["max"])
             x = norm(float(i[index]),float(headers[index]["min"]),float(headers[index]["max"]))
             y = norm(float(j[index]),float(headers[index]["min"]),float(headers[index]["max"]))
             sum1 = sum1 - e**(weight * (x - y)/n)
@@ -204,8 +204,8 @@ else:
     f = open('output.txt', 'w')
     for header in headers:
         f.write(header["name"] + ',')
-    f.write('rank\n')
+    f.write('Rank\n')
     for row in data:
         f.write(str(row) + '\n')
     f.close()
-    print 'Please see output.txt in current directory for the valid read data.'
+    print 'Please see output.txt in current directory for the valid read data sorted by domination rank.'
