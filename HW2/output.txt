@@ -1,4 +1,4 @@
-cylinders,displacement,horsepower,weight,acceleration,model,origin,mpg,rank
+cylinders,displacement,horsepower,weight,acceleration,model,origin,mpg,Rank
 ['4', '97', '52', '2130', '24.6', '82', '2', '40', 1]
 ['4', '90', '48', '2335', '23.7', '80', '2', '40', 2]
 ['4', '90', '48', '2085', '21.7', '80', '2', '40', 3]

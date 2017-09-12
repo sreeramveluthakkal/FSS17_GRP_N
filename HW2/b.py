@@ -96,7 +96,7 @@ def dominate(i, j, headers, n):
     while index < len(headers):
         if(headers[index]["goal"]==True):
             weight = headers[index]["weight"]
-            #print "I=",i[index],",J=",j[index],"MIN=",float(headers[index]["min"]),",MAX=",float(headers[index]["max"])
+            #print "Weight=",weight,",I=",i[index],",J=",j[index],",MIN=",float(headers[index]["min"]),",MAX=",float(headers[index]["max"])
             x = norm(float(i[index]),float(headers[index]["min"]),float(headers[index]["max"]))
             y = norm(float(j[index]),float(headers[index]["min"]),float(headers[index]["max"]))
             sum1 = sum1 - e**(weight * (x - y)/n)
@@ -197,10 +197,25 @@ else:
     headers = results['headers']
     lineCount = len(data)
     print 'Number of lines of valid data:', lineCount
-
-
     print("--- %s seconds ---" % (time.time() - start_time))
 
+    #write data to terminal
+    print 'Printing the top and bottom ten rows, as sorted by their dom score, with the top 5 and the bottom 5 domination scores:'
+    for header in headers:
+        print (header["name"] + ','),
+    print 'Rank' 
+    print 'TOP 5 DATA RANKED BY DOMINATION SCORE (ASC)'
+    index = 0
+    while index < min(5,len(data)):
+        print str(data[index])
+        index += 1
+    print 'BOTTOM 5 DATA RANKED BY DOMINATION SCORE (DESC)'
+    index = len(data)-1
+    while index >= len(data)-min(6,len(data)):
+        print str(data[index])
+        index -= 1
+
+    #write data to file
     f = open('output.txt', 'w')
     for header in headers:
         f.write(header["name"] + ',')
