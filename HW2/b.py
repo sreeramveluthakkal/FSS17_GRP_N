@@ -48,6 +48,7 @@ def calculateSD(header, x):
 
 def updateHeaders(lineList, headers):
     for idx, val in enumerate(lineList):
+        val = float(val)
         if "count" in headers[idx]:
                 headers[idx]["count"] = headers[idx]["count"]+1
         else:
