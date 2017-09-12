@@ -1,5 +1,6 @@
 import re
 import time
+import sys
 
 # Helper functions:====================
 # https://stackoverflow.com/a/15357477
@@ -136,7 +137,7 @@ def parse (filename):
                 failed = False
                 for h in xrange(len(headers)):
                     if headers[h]['typeof'] == 'NUM' and not (isfloat(lineList[h]) or isint(lineList[h])):
-                        print 'err: unexpected data found in line:', lineNumber #, lineList
+                        print 'err: unexpected data found in line:', lineNumber + 1 #, lineList
                         failed = True
                 if not failed:
                     data.append(lineList)
@@ -145,13 +146,23 @@ def parse (filename):
     print headers        
     return {'headers': headers, 'data': data, 'fileLineCount': lineNumber}
 
+if len(sys.argv) < 2: 
+    print 'Please give file name in command line arguments: python a.py <filename>'
+    exit(1)
 
-# Running the parser
-start_time = time.time()
+else:
+    # Running the parser
+    start_time = time.time()
 
-lineCount = len(parse('auto.csv')['data'])
-print 'Number of lines of valid data:', lineCount
-# print parse('test.csv')['data']
+    data = parse(sys.argv[1])['data']
+    lineCount = len(data)
+    print 'Number of lines of valid data:', lineCount
 
-print("--- %s seconds ---" % (time.time() - start_time))
 
+    print("--- %s seconds ---" % (time.time() - start_time))
+
+    f = open('output.txt', 'w')
+    for row in data:
+        f.write(str(row) + '\n')
+    f.close()
+    print 'Please see output.txt in current directory for the valid read data.'
