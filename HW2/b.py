@@ -45,8 +45,8 @@ def calculateSD(header, x):
         sd = (m2/(n-1))**0.5
     return sd, mu, m2
 
-def updateHeaders(line_list, headers):
-    for idx, val in enumerate(line_list):
+def updateHeaders(lineList, headers):
+    for idx, val in enumerate(lineList):
         if "count" in headers[idx]:
                 headers[idx]["count"] = headers[idx]["count"]+1
         else:
@@ -57,7 +57,7 @@ def updateHeaders(line_list, headers):
             else:
                 headers[idx]["min"] = val
             if "max" in headers[idx]:
-                headers[idx]["max"] = max(headers[idx]["min"], val)
+                headers[idx]["max"] = max(headers[idx]["max"], val)
             else:
                 headers[idx]["max"] = val
             if "sd" in headers[idx]:
@@ -70,29 +70,54 @@ def updateHeaders(line_list, headers):
         else:
             if "fmap" in headers[idx]:
                 headers[idx]["fmap"][val] = headers[idx]["fmap"].get(val,0)+1
-                print "freq for "+val+" is "+str(headers[idx]["fmap"][val])
+                #print "freq for "+val+" is "+str(headers[idx]["fmap"][val])
             else:
                 headers[idx]["fmap"] = {}
-                headers[idx]["fmap"][val] = 1;
+                headers[idx]["fmap"][val] = 1
             if "most" in headers[idx]:
                 seen = headers[idx]["fmap"][val]
                 if(seen>headers[idx]["most"]):
-                    headers[idx]["most"] = seen;
-                    headers[idx]["mode"] = val;
+                    headers[idx]["most"] = seen
+                    headers[idx]["mode"] = val
             else:
-                headers[idx]["most"] = headers[idx]["fmap"].get(val,0);
+                headers[idx]["most"] = headers[idx]["fmap"].get(val,0)
 
+def norm(currval, minval, maxval):
+	try:
+		val = (currval - minval)/(maxval - minval)
+	except ZeroDivisionError:
+		val = (currval - minval)/(10**-2)
+   	return val
 
-                
+def dominate(i, j, headers, n):
+    sum1,sum2,e = 0.0,0.0,2.71828
+    index = 0
+    while index < len(headers):
+		if(headers[index]["goal"]==True):
+			weight = headers[index]["weight"]
+			print "I=",i[index],",J=",j[index],"MIN=",float(headers[index]["min"]),",MAX=",float(headers[index]["max"])
+			print "\n"
+			x = norm(float(i[index]),float(headers[index]["min"]),float(headers[index]["max"]))
+			y = norm(float(j[index]),float(headers[index]["min"]),float(headers[index]["max"]))
+			sum1 = sum1 - e**(weight * (x - y)/n)
+			sum2 = sum2 - e**(weight * (y - x)/n)
+		index += 1
+    return sum1/n < sum2/n
 
-            
-
+def dom(index, row, data, headers, numgoals):
+    rowrank = 1
+    for i, otherrow in enumerate(data):
+        if i != index:
+            if dominate(row, otherrow, headers, numgoals):
+                rowrank += 1
+    return rowrank
 
 def parse (filename):
     lineNumber = 0 # line count
     headers = [] # list of dictionaries to keep track of flags
     data = [] # Adding data here
     nCol = 0
+    numgoals = 0
 
     with open(filename, 'r') as f:
         for line in f:
@@ -114,6 +139,8 @@ def parse (filename):
                 for h in xrange(nCol):
 
                     # Checking ignore
+                    headers[h]["goal"] = False #initialise goal as False
+                    headers[h]["weight"] = 0 #initialise weight as 0
                     if lineList[h][0] == '?':
                         headers[h]["ignore"] = True
                         headers[h]["typeof"] = None
@@ -122,7 +149,15 @@ def parse (filename):
 
                         # Checking NUM/SYM --> We only check if not '?'
                         if lineList[h][0] == '>' or lineList[h][0] == '<' or  lineList[h][0] == '$' or lineList[h][0] == '<$' or lineList[h][0] == '>$':
-                            headers[h]["typeof"] = 'NUM'  
+                            headers[h]["typeof"] = 'NUM'
+                            if lineList[h][0] != '$':
+                            	headers[h]["goal"] = True
+                            	numgoals += 1
+                            	if lineList[h][0] == '>':
+                            		headers[h]["weight"] = 1
+                            	else:
+                            		headers[h]["weight"] = -1
+
                         else: # includes '!', right?
                             headers[h]["typeof"] = 'SYM'
                     
@@ -143,7 +178,9 @@ def parse (filename):
                     data.append(lineList)
                     updateHeaders(lineList, headers)
             lineNumber += 1
-    print headers        
+    #print headers
+    for i,row in enumerate(data):
+    	data[i].append(dom(i,row,data,headers,numgoals)) #append domination rank to row
     return {'headers': headers, 'data': data, 'fileLineCount': lineNumber}
 
 if len(sys.argv) < 2: 
