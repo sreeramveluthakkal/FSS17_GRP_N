@@ -48,12 +48,12 @@ def calculateSD(header, x):
 
 def updateHeaders(lineList, headers):
     for idx, val in enumerate(lineList):
-        val = float(val)
         if "count" in headers[idx]:
                 headers[idx]["count"] = headers[idx]["count"]+1
         else:
             headers[idx]["count"] = 1
         if headers[idx]["typeof"] == "NUM":
+            val = float(val)
             if "min" in headers[idx]:
                 headers[idx]["min"] = min(headers[idx]["min"], val)
             else:
@@ -179,7 +179,7 @@ def parse (filename):
                     data.append(lineList)
                     updateHeaders(lineList, headers)
             lineNumber += 1
-    #print headers
+    print headers
     for i,row in enumerate(data):
         data[i].append(dom(i,row,data,headers,numgoals)) #append domination rank to row
     data.sort(key=lambda x: x[len(data)-1]) #sort by last column
