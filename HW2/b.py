@@ -1,5 +1,6 @@
 import re
 import time
+import sys
 
 # Helper functions:====================
 # https://stackoverflow.com/a/15357477
@@ -24,6 +25,7 @@ def isint(x):
 def clean (str):
     str = re.sub('#.+$', '', str) # remove comments
     str = str.replace('\n', '') # remove new lines
+    str = str.replace('\r', '') # remove new lines
     str = str.replace(' ', '') # remove spaces
     return str
 
@@ -82,25 +84,24 @@ def updateHeaders(lineList, headers):
                 headers[idx]["most"] = headers[idx]["fmap"].get(val,0)
 
 def norm(currval, minval, maxval):
-	try:
-		val = (currval - minval)/(maxval - minval)
-	except ZeroDivisionError:
-		val = (currval - minval)/(10**-2)
-   	return val
+    try:
+        val = (currval - minval)/(maxval - minval)
+    except ZeroDivisionError:
+        val = (currval - minval)/(10**-2)
+    return val
 
 def dominate(i, j, headers, n):
     sum1,sum2,e = 0.0,0.0,2.71828
     index = 0
     while index < len(headers):
-		if(headers[index]["goal"]==True):
-			weight = headers[index]["weight"]
-			print "I=",i[index],",J=",j[index],"MIN=",float(headers[index]["min"]),",MAX=",float(headers[index]["max"])
-			print "\n"
-			x = norm(float(i[index]),float(headers[index]["min"]),float(headers[index]["max"]))
-			y = norm(float(j[index]),float(headers[index]["min"]),float(headers[index]["max"]))
-			sum1 = sum1 - e**(weight * (x - y)/n)
-			sum2 = sum2 - e**(weight * (y - x)/n)
-		index += 1
+        if(headers[index]["goal"]==True):
+            weight = headers[index]["weight"]
+            print "I=",i[index],",J=",j[index],"MIN=",float(headers[index]["min"]),",MAX=",float(headers[index]["max"])
+            x = norm(float(i[index]),float(headers[index]["min"]),float(headers[index]["max"]))
+            y = norm(float(j[index]),float(headers[index]["min"]),float(headers[index]["max"]))
+            sum1 = sum1 - e**(weight * (x - y)/n)
+            sum2 = sum2 - e**(weight * (y - x)/n)
+        index += 1
     return sum1/n < sum2/n
 
 def dom(index, row, data, headers, numgoals):
@@ -150,12 +151,12 @@ def parse (filename):
                         if lineList[h][0] == '>' or lineList[h][0] == '<' or  lineList[h][0] == '$' or lineList[h][0] == '<$' or lineList[h][0] == '>$':
                             headers[h]["typeof"] = 'NUM'
                             if lineList[h][0] != '$':
-                            	headers[h]["goal"] = True
-                            	numgoals += 1
-                            	if lineList[h][0] == '>':
-                            		headers[h]["weight"] = 1
-                            	else:
-                            		headers[h]["weight"] = -1
+                                headers[h]["goal"] = True
+                                numgoals += 1
+                                if lineList[h][0] == '>':
+                                    headers[h]["weight"] = 1
+                                else:
+                                    headers[h]["weight"] = -1
 
                         else: # includes '!', right?
                             headers[h]["typeof"] = 'SYM'
@@ -171,7 +172,7 @@ def parse (filename):
                 failed = False
                 for h in xrange(len(headers)):
                     if headers[h]['typeof'] == 'NUM' and not (isfloat(lineList[h]) or isint(lineList[h])):
-                        print 'err: unexpected data found in line:', lineNumber #, lineList
+                        print 'err: unexpected data found in line:', lineNumber + 1 #, lineList
                         failed = True
                 if not failed:
                     data.append(lineList)
@@ -179,16 +180,32 @@ def parse (filename):
             lineNumber += 1
     #print headers
     for i,row in enumerate(data):
-    	data[i].append(dom(i,row,data,headers,numgoals)) #append domination rank to row
+        data[i].append(dom(i,row,data,headers,numgoals)) #append domination rank to row
+    data.sort(key=lambda x: x[len(data)-1]) #sort by last column
     return {'headers': headers, 'data': data, 'fileLineCount': lineNumber}
 
+if len(sys.argv) < 2: 
+    print 'Usage: python b.py <filename>'
+    exit(1)
 
-# Running the parser
-start_time = time.time()
+else:
+    # Running the parser
+    start_time = time.time()
 
-lineCount = len(parse('auto_demo.csv')['data'])
-print 'Number of lines of valid data:', lineCount
-print parse('auto_demo.csv')['data']
+    results = parse(sys.argv[1])
+    data = results['data']
+    headers = results['headers']
+    lineCount = len(data)
+    print 'Number of lines of valid data:', lineCount
 
-print("--- %s seconds ---" % (time.time() - start_time))
 
+    print("--- %s seconds ---" % (time.time() - start_time))
+
+    f = open('output.txt', 'w')
+    for header in headers:
+        f.write(header["name"] + ',')
+    f.write('rank\n')
+    for row in data:
+        f.write(str(row) + '\n')
+    f.close()
+    print 'Please see output.txt in current directory for the valid read data.'
