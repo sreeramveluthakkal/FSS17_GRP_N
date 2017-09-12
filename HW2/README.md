@@ -37,7 +37,6 @@ BOTTOM 5 DATA RANKED BY DOMINATION SCORE (DESC)
 ['8', '455', '225', '4951', '11', '73', '1', '10', 9]  
 ['8', '429', '198', '4952', '11.5', '73', '1', '10', 8]  
 ['8', '383', '180', '4955', '11.5', '71', '1', '10', 7]  
-['8', '400', '175', '5140', '12', '71', '1', '10', 6]  
 Please see output.txt in current directory for the valid read data sorted by domination rank.  
 
 ### Contributors

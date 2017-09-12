@@ -211,7 +211,7 @@ else:
         index += 1
     print 'BOTTOM 5 DATA RANKED BY DOMINATION SCORE (DESC)'
     index = len(data)-1
-    while index >= len(data)-min(6,len(data)):
+    while index > len(data)-min(6,len(data)):
         print str(data[index])
         index -= 1
 
