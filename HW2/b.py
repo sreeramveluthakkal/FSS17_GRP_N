@@ -184,7 +184,7 @@ def parse (filename):
     data.sort(key=lambda x: x[len(data)-1]) #sort by last column
     return {'headers': headers, 'data': data, 'fileLineCount': lineNumber}
 
-if len(sys.argv) < 2: 
+if len(sys.argv) < 2:
     print 'Usage: python b.py <filename>'
     exit(1)
 
