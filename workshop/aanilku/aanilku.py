@@ -1,7 +1,7 @@
 
 # coding: utf-8
 
-# In[4]:
+# In[2]:
 
 
 import numpy as np
@@ -15,7 +15,7 @@ print(iris.target_names)
 print(np.unique(iris_y))
 
 
-# In[5]:
+# In[3]:
 
 
 import matplotlib.pyplot as plt
@@ -27,7 +27,7 @@ y_min, y_max = X[:, 1].min() - .5, X[:, 1].max() + .5
 
 
 
-# In[6]:
+# In[4]:
 
 
 plt.figure(2, figsize=(8, 6))
@@ -42,7 +42,7 @@ plt.yticks(())
 plt.show()
 
 
-# In[7]:
+# In[5]:
 
 
 # Plot the distribution in boxplot
@@ -52,7 +52,7 @@ plt.ylabel('Cm')
 plt.show()
 
 
-# In[8]:
+# In[6]:
 
 
 np.random.seed(0)
@@ -65,28 +65,28 @@ iris_X_test  = iris_X[indices[-10:]]
 iris_y_test  = iris_y[indices[-10:]]
 
 
-# In[9]:
+# In[7]:
 
 
 from sklearn.neighbors import KNeighborsClassifier
 knn = KNeighborsClassifier()
-knn.fit(iris_X_train, iris_y_train) 
+knn.fit(iris_X_train, iris_y_train)
 
 
-# In[10]:
+# In[8]:
 
 
 knn.predict(iris_X_test)
 print iris_y_test
 
 
-# In[11]:
+# In[9]:
 
 
 n_neighbors = 1
 
 
-# In[12]:
+# In[10]:
 
 
 
@@ -98,36 +98,36 @@ cmap_bold = ListedColormap(['#FF0000', '#00FF00', '#0000FF'])
 h = .02  # step size in the mesh
 
 
-# In[13]:
+# In[12]:
 
 
-for n_neighbors in range(1,30,5):
+for n_neighbors in [1,10,20,30,40,50,100]:
     print "Plot with k = ",n_neighbors
     for weights in ['uniform', 'distance']:
         # we create an instance of Neighbours Classifier and fit the data.
         knn = KNeighborsClassifier(n_neighbors, weights=weights)
         knn.fit(X, y)
-
+        
         # Plot the decision boundary. For that, we will assign a color to each
         # point in the mesh [x_min, x_max]x[y_min, y_max].
         xx, yy = np.meshgrid(np.arange(x_min, x_max, h),
                              np.arange(y_min, y_max, h))
-        Z = knn.predict(np.c_[xx.ravel(), yy.ravel()])
+                             Z = knn.predict(np.c_[xx.ravel(), yy.ravel()])
+                             
+                             # Put the result into a color plot
+                             Z = Z.reshape(xx.shape)
+                             plt.figure()
+                             plt.pcolormesh(xx, yy, Z, cmap=cmap_light)
+                             
+                             # Plot also the training points
+                             plt.scatter(X[:, 0], X[:, 1], c=y, cmap=cmap_bold,
+                                         edgecolor='k', s=20)
+                             plt.xlim(xx.min(), xx.max())
+                             plt.ylim(yy.min(), yy.max())
+                             plt.title("3-Class classification (k = %i, weights = '%s')"
+                                       % (n_neighbors, weights))
 
-        # Put the result into a color plot
-        Z = Z.reshape(xx.shape)
-        plt.figure()
-        plt.pcolormesh(xx, yy, Z, cmap=cmap_light)
-
-        # Plot also the training points
-        plt.scatter(X[:, 0], X[:, 1], c=y, cmap=cmap_bold,
-                    edgecolor='k', s=20)
-        plt.xlim(xx.min(), xx.max())
-        plt.ylim(yy.min(), yy.max())
-        plt.title("3-Class classification (k = %i, weights = '%s')"
-                  % (n_neighbors, weights))
-
-    plt.show()
+plt.show()
 
 
 # In[14]:
@@ -140,68 +140,40 @@ from sklearn import svm
 
 
 svc = svm.SVC(kernel='linear')
-svc.fit(iris_X_train, iris_y_train)  
+svc.fit(iris_X_train, iris_y_train)
 print svc.predict(iris_X_test)
 print iris_y_test
 
 
-# In[16]:
 
 
-# SVM with linear kernel
-svc = svm.SVC(kernel='poly')
-svc.fit(iris_X_train, iris_y_train)  
-print svc.predict(iris_X_test)
-print iris_y_test
+# In[22]:
 
 
-# In[17]:
-
-
-# SVM with rbf kernel
-svc = svm.SVC(kernel='rbf')
-svc.fit(iris_X_train, iris_y_train)  
-print svc.predict(iris_X_test)
-print iris_y_test
-
-
-# In[18]:
-
-
-# SVM with rbf kernel
-svc = svm.SVC(kernel='sigmoid')
-svc.fit(iris_X_train, iris_y_train)  
-print svc.predict(iris_X_test)
-print iris_y_test
-
-
-# In[21]:
-
-
-for k in ['linear', 'poly', 'rbf', 'sigmoid']:
-        print "Plot with kernel= ",k
-    
+for k in ['linear', 'poly', 'rbf']:
+    print "Plot with kernel= ",k
+        
         # we create an instance of Neighbours Classifier and fit the data.
         svc = svm.SVC(kernel=k)
         svc.fit(X, y)
-
+        
         # Plot the decision boundary. For that, we will assign a color to each
         # point in the mesh [x_min, x_max]x[y_min, y_max].
         xx, yy = np.meshgrid(np.arange(x_min, x_max, h),
                              np.arange(y_min, y_max, h))
-        Z =  svc.predict(np.c_[xx.ravel(), yy.ravel()])
-
-        # Put the result into a color plot
-        Z = Z.reshape(xx.shape)
-        plt.figure()
-        plt.pcolormesh(xx, yy, Z, cmap=cmap_light)
-
-        # Plot also the training points
-        plt.scatter(X[:, 0], X[:, 1], c=y, cmap=cmap_bold,
-                    edgecolor='k', s=20)
-        plt.xlim(xx.min(), xx.max())
-        plt.ylim(yy.min(), yy.max())
-
+                             Z =  svc.predict(np.c_[xx.ravel(), yy.ravel()])
+                             
+                             # Put the result into a color plot
+                             Z = Z.reshape(xx.shape)
+                             plt.figure()
+                             plt.pcolormesh(xx, yy, Z, cmap=cmap_light)
+                             
+                             # Plot also the training points
+                             plt.scatter(X[:, 0], X[:, 1], c=y, cmap=cmap_bold,
+                                         edgecolor='k', s=20)
+                             plt.xlim(xx.min(), xx.max())
+                             plt.ylim(yy.min(), yy.max())
+                             
         plt.show()
 
 
