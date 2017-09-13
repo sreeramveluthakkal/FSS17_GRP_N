@@ -182,7 +182,7 @@ def parse (filename):
     print headers
     for i,row in enumerate(data):
         data[i].append(dom(i,row,data,headers,numgoals)) #append domination rank to row
-    data.sort(key=lambda x: x[len(data)-1]) #sort by last column
+    data.sort(key=lambda x: x[len(data)-1],reverse=True) #sort by last column
     return {'headers': headers, 'data': data, 'fileLineCount': lineNumber}
 
 if len(sys.argv) < 2:
