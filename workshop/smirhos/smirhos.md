@@ -1,6 +1,6 @@
 ### UNITY ID : smirhos
 
-### 2. Explore the effects for different K in K Nearest Neighbor classification.  
+### 1. Explore the effects for different K in K Nearest Neighbor classification.  
 I used a loop to run the code with different k:
 
 ``` python
