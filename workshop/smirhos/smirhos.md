@@ -88,6 +88,6 @@ The plots are in this directory and called `smirhos_<kernel>.png`.
 Based on the plots, you can see `linear` classified following straight lines, and `poly` created curves.
 
 ### 4. Explain how we should choose the kernel.  
-# Found this answer online which is very detailed: https://stats.stackexchange.com/a/18035
+Found this answer online which is very detailed: https://stats.stackexchange.com/a/18035
 
 Typically it is hard to choose a kernel for an arbitrary dataset. The automation of this task is very tricky too and best approach for this might be cross validation. 
