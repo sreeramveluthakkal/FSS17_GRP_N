@@ -68,7 +68,7 @@ print iris_y_test
 
 
 # KNN Visualization.
-#n_neighbors = 15
+n_neighbors = 15
 h = .02  # step size in the mesh
 
 # Create color maps
@@ -78,8 +78,44 @@ cmap_bold = ListedColormap(['#FF0000', '#00FF00', '#0000FF'])
 
 for weights in ['uniform', 'distance']:
     # we create an instance of Neighbours Classifier and fit the data.
-    for n_neighbors in [5,10,15,20,25]:
-        knn = KNeighborsClassifier(n_neighbors=n_neighbors, weights=weights)
+    knn = KNeighborsClassifier(n_neighbors, weights=weights)
+    knn.fit(X, y)
+
+    # Plot the decision boundary. For that, we will assign a color to each
+    # point in the mesh [x_min, x_max]x[y_min, y_max].
+    xx, yy = np.meshgrid(np.arange(x_min, x_max, h),
+                         np.arange(y_min, y_max, h))
+    Z = knn.predict(np.c_[xx.ravel(), yy.ravel()])
+
+    # Put the result into a color plot
+    Z = Z.reshape(xx.shape)
+    plt.figure()
+    plt.pcolormesh(xx, yy, Z, cmap=cmap_light)
+
+    # Plot also the training points
+    plt.scatter(X[:, 0], X[:, 1], c=y, cmap=cmap_bold,
+                edgecolor='k', s=20)
+    plt.xlim(xx.min(), xx.max())
+    plt.ylim(yy.min(), yy.max())
+    plt.title("3-Class classification (k = %i, weights = '%s')"
+              % (n_neighbors, weights))
+
+plt.show()
+
+### TODO: explore the effects for different Ks.
+k = [1, 5, 10, 50, 100]
+
+for n in k:
+    n_neighbors = n
+    h = .02  # step size in the mesh
+    
+    from matplotlib.colors import ListedColormap
+    cmap_light = ListedColormap(['#FFAAAA', '#AAFFAA', '#AAAAFF'])
+    cmap_bold = ListedColormap(['#FF0000', '#00FF00', '#0000FF'])
+
+    for weights in ['uniform', 'distance']:
+        # we create an instance of Neighbours Classifier and fit the data.
+        knn = KNeighborsClassifier(n_neighbors, weights=weights)
         knn.fit(X, y)
 
         # Plot the decision boundary. For that, we will assign a color to each
@@ -101,32 +137,39 @@ for weights in ['uniform', 'distance']:
         plt.title("3-Class classification (k = %i, weights = '%s')"
                   % (n_neighbors, weights))
 
-plt.show()
-
-### TODO: explore the effects for different Ks.
-
+    plt.show()
 
 
 
 """ Part 3 """
 from sklearn import svm
-#svc = svm.SVC(kernel=kernel)
-#svc.fit(iris_X_train, iris_y_train)  
-#svc.predict(iris_X_test)
-#print iris_y_test
+svc = svm.SVC(kernel='linear')
+svc.fit(iris_X_train, iris_y_train)  
+svc.predict(iris_X_test)
+print iris_y_test
 
 
 ### TODO: get the SVC visualization for different kernels.
-# REFERENCE - http://scikit-learn.org/stable/auto_examples/svm/plot_svm_kernels.html
-for kernel in ('linear', 'poly', 'rbf', 'sigmoid'):
-    svc = svm.SVC(kernel=kernel)
-    svc.fit(iris_X_train, iris_y_train)  
-    svc.predict(iris_X_test)
-    print iris_y_test
-for k in ['linear', 'poly', 'rbf', 'sigmoid']:
-    print "Plot with kernel= ",k
+kernels = ['linear', 'poly', 'rbf', 'sigmoid']
 
-    # we create an instance of Neighbours Classifier and fit the data.
+for k in kernels:
+    from sklearn import svm
+    svc = svm.SVC(kernel=k)
+    svc.fit(iris_X_train, iris_y_train)  
+    print svc.predict(iris_X_test)
+    print iris_y_test
+
+## useful source: http://scikit-learn.org/stable/auto_examples/svm/plot_svm_kernels.html
+### Plot different kernels.
+from sklearn import svm
+kernels = ['linear', 'poly', 'rbf', 'sigmoid']
+
+for k in kernels:
+    
+    from matplotlib.colors import ListedColormap
+    cmap_light = ListedColormap(['#FFAAAA', '#AAFFAA', '#AAAAFF'])
+    cmap_bold = ListedColormap(['#FF0000', '#00FF00', '#0000FF'])
+
     svc = svm.SVC(kernel=k)
     svc.fit(X, y)
 
@@ -134,7 +177,7 @@ for k in ['linear', 'poly', 'rbf', 'sigmoid']:
     # point in the mesh [x_min, x_max]x[y_min, y_max].
     xx, yy = np.meshgrid(np.arange(x_min, x_max, h),
                          np.arange(y_min, y_max, h))
-    Z =  svc.predict(np.c_[xx.ravel(), yy.ravel()])
+    Z = svc.predict(np.c_[xx.ravel(), yy.ravel()])
 
     # Put the result into a color plot
     Z = Z.reshape(xx.shape)
@@ -146,5 +189,6 @@ for k in ['linear', 'poly', 'rbf', 'sigmoid']:
                 edgecolor='k', s=20)
     plt.xlim(xx.min(), xx.max())
     plt.ylim(yy.min(), yy.max())
+    
 
     plt.show()
