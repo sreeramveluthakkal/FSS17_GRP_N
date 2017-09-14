@@ -212,9 +212,11 @@ else:
         index += 1
     print 'BOTTOM 5 DATA RANKED BY DOMINATION SCORE (DESC)'
     index = len(data)-1
+    bottomFive = ""
     while index > len(data)-min(6,len(data)):
-        print str(data[index])
+        bottomFive = str(data[index]) + '\n' + bottomFive
         index -= 1
+    print bottomFive
 
     #write data to file
     f = open('output.txt', 'w')
