@@ -19,8 +19,8 @@ Combine ranges where some dependent variable is not changed across that combinat
 `Python 2.7`
 
 ### Building
-`python c.py <inputfile>`  
-For example `python c.py auto.csv`  
+`python c.py <inputfile> <column index>`  
+For example `python c.py auto.csv 1`  
 
 ### Sample Output
  

@@ -199,13 +199,15 @@ def unsupervisedDiscretization(data, headers, i):
     binSize = int(math.floor(math.sqrt(lineNumber)))
     bins = []
     epsilon = 0.2 * headers[i]["sd"]
+    print 'bin size (i.e. sqrt(n)):', binSize
+    print 'epsilon:', epsilon
 
     counter = 0
     while counter < lineNumber:
         n = 1
         bin = {"lo": float(data[counter][i]), "hi": float(data[counter][i])}
 
-        while (counter+1 < lineNumber) and (((bin["hi"] - bin["lo"]) < epsilon) or (len(bins) > 0 and (bins[-1]["hi"] - bin["lo"]) < epsilon) or (n < binSize)):
+        while (counter+1 < lineNumber) and (((bin["hi"] - bin["lo"]) < epsilon) or (n < binSize) or (float(data[counter + 1][i]) - float(data[counter][i]) < epsilon)):
             bin["hi"] = float(data[counter + 1][i])
             n += 1
             counter += 1
@@ -213,13 +215,13 @@ def unsupervisedDiscretization(data, headers, i):
         bins += [{"lo": bin["lo"], "hi": bin["hi"], "span": bin["hi"]-bin["lo"], "n": n}]
         counter += 1
 
-    return bins
+    return {"bins": bins, "sortedData": data}
 
 
 
 ## Running the script
-if len(sys.argv) < 2:
-    print 'Usage: python b.py <filename>'
+if len(sys.argv) < 3:
+    print 'Usage: python b.py <filename> <column index>'
     exit(1)
 
 else:
@@ -252,7 +254,11 @@ else:
     print bottomFive
 
     print 'We have many unsupervised ranges.'
-    for r in unsupervisedDiscretization(data, headers, 4):
+    # Note: Change the third column to run unsupervised discretization on other columns
+    ud = unsupervisedDiscretization(data, headers, int(sys.argv[2]))
+    sortedData = ud["sortedData"]
+    bins = ud["bins"]
+    for r in bins:
         print r
 
 #write data to file
@@ -260,7 +266,7 @@ f = open('output.txt', 'w')
 for header in headers:
     f.write(header["name"] + ',')
 f.write('Rank\n')
-for row in data:
+for row in sortedData:
     f.write(str(row) + '\n')
 f.close()
-print '\nPlease see output.txt in current directory for the valid read data sorted by domination rank.'
+print '\nPlease see output.txt in current directory for the sorted valid read data sorted by domination rank.'
