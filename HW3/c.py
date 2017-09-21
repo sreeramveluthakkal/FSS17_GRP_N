@@ -207,13 +207,23 @@ def unsupervisedDiscretization(data, headers, i):
         n = 1
         bin = {"lo": float(data[counter][i]), "hi": float(data[counter][i])}
 
-        while (counter+1 < lineNumber) and (((bin["hi"] - bin["lo"]) < epsilon) or (n < binSize) or (float(data[counter + 1][i]) - float(data[counter][i]) < epsilon)):
+        while (counter+1 < lineNumber) and \
+                (((bin["hi"] - bin["lo"]) < epsilon) or \
+                (n < binSize) or \
+                (float(data[counter + 1][i]) - bin["hi"] < epsilon) or \
+                (bin["hi"] - bin["lo"] < epsilon)):
             bin["hi"] = float(data[counter + 1][i])
             n += 1
             counter += 1
 
         bins += [{"lo": bin["lo"], "hi": bin["hi"], "span": bin["hi"]-bin["lo"], "n": n}]
         counter += 1
+    
+    # checking last bin
+    if len(bins) > 1 and bins[-1]["hi"] - bins[-1]["lo"] < epsilon:
+        bins[-2]["hi"] = bins[-1]["hi"]
+        bins[-2]["n"] += bins[-1]["n"]
+        del bins[-1]
 
     return {"bins": bins, "sortedData": data}
 
