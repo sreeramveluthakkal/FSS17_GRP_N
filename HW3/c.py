@@ -1,6 +1,7 @@
 import re
 import time
 import sys
+import math
 
 # Helper functions:====================
 # https://stackoverflow.com/a/15357477
@@ -185,6 +186,38 @@ def parse (filename):
     data.sort(key=lambda x: x[len(data)-1],reverse=True) #sort by last column
     return {'headers': headers, 'data': data, 'fileLineCount': lineNumber}
 
+## Part 3
+
+# data: [[]]
+# i: index to sort on
+def sortData(data, i):
+    return sorted(data, key=lambda x: float(x[i]))
+
+def unsupervisedDiscretization(data, headers, i):
+    data = sortData(data, i)
+    lineNumber = len(data)
+    binSize = int(math.floor(math.sqrt(lineNumber)))
+    bins = []
+    epsilon = 0.2 * headers[i]["sd"]
+
+    counter = 0
+    while counter < lineNumber:
+        n = 1
+        bin = {"lo": float(data[counter][i]), "hi": float(data[counter][i])}
+
+        while (counter+1 < lineNumber) and (((bin["hi"] - bin["lo"]) < epsilon) or (len(bins) > 0 and (bins[-1]["hi"] - bin["lo"]) < epsilon) or (n < binSize)):
+            bin["hi"] = float(data[counter + 1][i])
+            n += 1
+            counter += 1
+
+        bins += [{"lo": bin["lo"], "hi": bin["hi"], "span": bin["hi"]-bin["lo"], "n": n}]
+        counter += 1
+
+    return bins
+
+
+
+## Running the script
 if len(sys.argv) < 2:
     print 'Usage: python b.py <filename>'
     exit(1)
@@ -218,12 +251,16 @@ else:
         index -= 1
     print bottomFive
 
-    #write data to file
-    f = open('output.txt', 'w')
-    for header in headers:
-        f.write(header["name"] + ',')
-    f.write('Rank\n')
-    for row in data:
-        f.write(str(row) + '\n')
-    f.close()
-    print 'Please see output.txt in current directory for the valid read data sorted by domination rank.'
+    print 'We have many unsupervised ranges.'
+    for r in unsupervisedDiscretization(data, headers, 4):
+        print r
+
+#write data to file
+f = open('output.txt', 'w')
+for header in headers:
+    f.write(header["name"] + ',')
+f.write('Rank\n')
+for row in data:
+    f.write(str(row) + '\n')
+f.close()
+print '\nPlease see output.txt in current directory for the valid read data sorted by domination rank.'
