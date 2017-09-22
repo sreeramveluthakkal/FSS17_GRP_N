@@ -4,7 +4,6 @@ import sys
 import math
 import numpy as np
 
-epsilon = 0
 # Helper functions:====================
 # https://stackoverflow.com/a/15357477
 def isfloat(x):
@@ -197,7 +196,6 @@ def sortData(data, i):
 
 
 def combineBins(bins):
-    global epsilon
     # calculating epsilon based on SD of dependent variable
     depValues = []
     for r in bins:
@@ -233,7 +231,6 @@ def combineBins(bins):
 
 
 def unsupervisedDiscretization(data, headers, i):
-    global epsilon
     data = sortData(data, i)
     lineNumber = len(data)
     binSize = int(math.floor(math.sqrt(lineNumber)))
