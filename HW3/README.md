@@ -41,8 +41,9 @@ We have fewer supervised ranges :)
 super     1   {label=  1 , most=  183.0 }  
 super     2   {label=  2 , most=  232.0 }  
 super     3   {label=  3 , most=  267.0 }  
-super     4   {label=  4 , most=  360.0 }  
-super     5   {label=  5 , most=  455.0 }   
+super     4   {label=  4 , most=  318.0 }  
+super     5   {label=  5 , most=  429.0 }  
+super     6   {label=  6 , most=  455.0 }  
  
 
 ### Contributors
