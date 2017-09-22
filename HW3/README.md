@@ -21,8 +21,11 @@ Combine ranges where some dependent variable is not changed across that combinat
 ### Building
 `python c.py <inputfile> <column index> [small value]`  
 For example `python c.py auto.csv 1 .1`  
-The last arguement is optional and it controls the value of epsilon
+NOTE:
+The last argument is optional and is the 'cohen' i.e. the multiplier for standard deviation in calculating epsilon.
+Since 0.2 as the multiplier results in an epsilon that is too small and causes no bins to merge, the sample output uses 0.1.
 
+The following output looks at the second column - displacement - in auto.csv. The 'median' is the median of the domination ranks of the corresponding bins. The domination ranks are 
 ### Sample Output
 We have many unsupervised ranges.  
 bin size (i.e. sqrt(n)): 19  
