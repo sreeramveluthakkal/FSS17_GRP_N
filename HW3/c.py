@@ -198,7 +198,11 @@ def sortData(data, i):
 
 def combineBins(bins):
     global epsilon
-    epsilon = 35 #dummy value for epsilon
+    # calculating epsilon based on SD of dependent variable
+    depValues = []
+    for r in bins:
+        depValues += r.get('values')
+    epsilon = 0.2* np.std(depValues)
     supeviseddRanges = []
     label = 1
     most = bins[0].get('hi')
@@ -211,7 +215,6 @@ def combineBins(bins):
         binValues = bins[i].get('values')
         while(j<binCount):
             if abs(currentMedian - bins[j].get('median')) < epsilon:
-                # print 'MERGE'
                 most = bins[j].get('hi')
                 binValues += bins[j].get('values')
                 # get median of the combined ranges and update the new median and contents of the range
