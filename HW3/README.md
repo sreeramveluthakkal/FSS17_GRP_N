@@ -26,7 +26,7 @@ Column index starts from 0.
 The last argument is optional and is the 'cohen' i.e. the multiplier for standard deviation in calculating epsilon.
 
 The following output looks at the second column - displacement - in auto.csv. The 'median' is the median of the domination ranks of the corresponding bins. The cohen used is the default value of 0.2.
-`python c.py auto.csv 1'
+`python c.py auto.csv 1`
 
 ### Sample Output
 We have many unsupervised ranges.  
