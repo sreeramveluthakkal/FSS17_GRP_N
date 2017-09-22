@@ -25,20 +25,20 @@ The last arguement is optional and it controls the value of epsilon
 
 ### Sample Output
 We have many unsupervised ranges.  
-bin size (i.e. sqrt(n)): 19
-epsilon: 10.4644003909
-{'lo': 68.0, 'hi': 183.0, 'span': 115.0, 'median': 280.5, 'n': 222}
-{'lo': 198.0, 'hi': 232.0, 'span': 34.0, 'median': 156.0, 'n': 44}
-{'lo': 250.0, 'hi': 267.0, 'span': 17.0, 'median': 120.0, 'n': 28}
-{'lo': 302.0, 'hi': 318.0, 'span': 16.0, 'median': 70.5, 'n': 42}
-{'lo': 340.0, 'hi': 360.0, 'span': 20.0, 'median': 36.0, 'n': 31}
-{'lo': 383.0, 'hi': 429.0, 'span': 46.0, 'median': 18.0, 'n': 19}
-{'lo': 440.0, 'hi': 455.0, 'span': 15.0, 'median': 6.5, 'n': 6}
-We have fewer supervised ranges :)
-{'most': 183.0, 'label': 1}
-{'most': 232.0, 'label': 2}
-{'most': 267.0, 'label': 3}
-{'most': 455.0, 'label': 4}
+bin size (i.e. sqrt(n)): 19  
+epsilon: 10.4644003909  
+{'lo': 68.0, 'hi': 183.0, 'span': 115.0, 'median': 280.5, 'n': 222}  
+{'lo': 198.0, 'hi': 232.0, 'span': 34.0, 'median': 156.0, 'n': 44}  
+{'lo': 250.0, 'hi': 267.0, 'span': 17.0, 'median': 120.0, 'n': 28}  
+{'lo': 302.0, 'hi': 318.0, 'span': 16.0, 'median': 70.5, 'n': 42}  
+{'lo': 340.0, 'hi': 360.0, 'span': 20.0, 'median': 36.0, 'n': 31}  
+{'lo': 383.0, 'hi': 429.0, 'span': 46.0, 'median': 18.0, 'n': 19}  
+{'lo': 440.0, 'hi': 455.0, 'span': 15.0, 'median': 6.5, 'n': 6}  
+We have fewer supervised ranges :)  
+{'most': 183.0, 'label': 1}  
+{'most': 232.0, 'label': 2}  
+{'most': 267.0, 'label': 3}  
+{'most': 455.0, 'label': 4}  
  
 
 ### Contributors
