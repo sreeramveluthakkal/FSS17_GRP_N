@@ -290,4 +290,3 @@ for row in sortedData:
     f.write(str(row) + '\n')
 f.close()
 print '\nPlease see output.txt in current directory for the sorted valid read data sorted by domination rank.'
-
