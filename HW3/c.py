@@ -206,12 +206,18 @@ def combineBins(bins):
     binCount = len(bins)
     while(i < binCount-1):
         most = bins[i].get('hi')
-        j = i+1
+        j = i + 1
         currentMedian = bins[i].get('median')
+        binValues = bins[i].get('values')
         while(j<binCount):
             if abs(currentMedian - bins[j].get('median')) < epsilon:
+                # print 'MERGE'
                 most = bins[j].get('hi')
-                currentMedian = bins[j].get('median')
+                binValues += bins[j].get('values')
+                # get median of the combined ranges and update the new median and contents of the range
+                currentMedian = np.median(binValues)
+                bins[j]["median"] = currentMedian
+                bins[j]["values"] = binValues
                 j = j + 1
             else:
                 break
@@ -255,7 +261,7 @@ def unsupervisedDiscretization(data, headers, i):
             n += 1
             counter += 1
         #Each bin now contains the median value of domination index
-        bins += [{"lo": bin["lo"], "hi": bin["hi"], "span": bin["hi"]-bin["lo"], "n": n, "median":np.median(tmp_list)}]
+        bins += [{"lo": bin["lo"], "hi": bin["hi"], "span": bin["hi"]-bin["lo"], "n": n, "median":np.median(tmp_list),"values":tmp_list}]
         counter += 1
 
     
@@ -308,16 +314,18 @@ else:
     ud = unsupervisedDiscretization(data, headers, int(sys.argv[2]))
     sortedData = ud["sortedData"]
     bins = ud["bins"]
-    for r in bins:
-        print r
+    # for r in bins:
+    #     print r
+    for i,r in enumerate(bins):
+        print 'x    ',i+1,'{ span = ', r.get('span'),', lo= ',r.get('lo'),' n= ',r.get('n'),' hi= ',r.get('hi'),'} median: ',r.get('median')
+        #print 'x    ',i+1,'{ span = ', r.get('span'),', lo= ',r.get('lo'),' n= ',r.get('n'),' hi= ',r.get('hi'),'}'
     supervisedBins = combineBins(bins)
     if len(supervisedBins) < len(bins):
         print 'We have fewer supervised ranges :)'
     else:
         print 'We have the same number of supervised ranges :('
-    #print 'Supervised bins: ',supervisedBins
-    for r in supervisedBins:
-        print r
+    for i,r in enumerate(supervisedBins):
+        print 'super    ',i+1,'  {label= ',r.get('label'),', most= ',r.get('most'),'}'
 
 #write data to file
 f = open('output.txt', 'w')
