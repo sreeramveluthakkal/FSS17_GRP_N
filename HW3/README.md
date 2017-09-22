@@ -24,7 +24,7 @@ For example `python c.py auto.csv 1 .1`
 The last arguement is optional and it controls the value of epsilon
 
 ### Sample Output
-We have many unsupervised ranges.
+We have many unsupervised ranges.  
 bin size (i.e. sqrt(n)): 19
 epsilon: 10.4644003909
 {'lo': 68.0, 'hi': 183.0, 'span': 115.0, 'median': 280.5, 'n': 222}
