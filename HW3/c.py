@@ -4,6 +4,7 @@ import sys
 import math
 import numpy as np
 
+epsilon = 0
 # Helper functions:====================
 # https://stackoverflow.com/a/15357477
 def isfloat(x):
@@ -194,7 +195,36 @@ def parse (filename):
 def sortData(data, i):
     return sorted(data, key=lambda x: float(x[i]))
 
+
+def combineBins(bins):
+    global epsilon
+    epsilon = 35 #dummy value for epsilon
+    supeviseddRanges = []
+    label = 1
+    most = bins[0].get('hi')
+    i = 0 
+    binCount = len(bins)
+    while(i < binCount-1):
+        most = bins[i].get('hi')
+        j = i+1
+        currentMedian = bins[i].get('median')
+        while(j<binCount):
+            if abs(currentMedian - bins[j].get('median')) < epsilon:
+                most = bins[j].get('hi')
+                currentMedian = bins[j].get('median')
+                j = j + 1
+            else:
+                break
+        supeviseddRanges += [{"label": label, "most":most}]
+        i = j
+        label = label + 1
+    if i == binCount-1:
+        supeviseddRanges += [{"label": label, "most":bins[i].get('hi')}]
+    return supeviseddRanges
+
+
 def unsupervisedDiscretization(data, headers, i):
+    global epsilon
     data = sortData(data, i)
     lineNumber = len(data)
     binSize = int(math.floor(math.sqrt(lineNumber)))
@@ -279,6 +309,14 @@ else:
     sortedData = ud["sortedData"]
     bins = ud["bins"]
     for r in bins:
+        print r
+    supervisedBins = combineBins(bins)
+    if len(supervisedBins) < len(bins):
+        print 'We have fewer supervised ranges :)'
+    else:
+        print 'We have the same number of supervised ranges :('
+    #print 'Supervised bins: ',supervisedBins
+    for r in supervisedBins:
         print r
 
 #write data to file
