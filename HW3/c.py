@@ -2,6 +2,7 @@ import re
 import time
 import sys
 import math
+import numpy as np
 
 # Helper functions:====================
 # https://stackoverflow.com/a/15357477
@@ -198,26 +199,35 @@ def unsupervisedDiscretization(data, headers, i):
     lineNumber = len(data)
     binSize = int(math.floor(math.sqrt(lineNumber)))
     bins = []
-    epsilon = 0.2 * headers[i]["sd"]
+    small_value = 0.2
+    if len(sys.argv)>3:
+        small_value = float(sys.argv[3])    
+
+    epsilon = small_value* headers[i]["sd"]
     print 'bin size (i.e. sqrt(n)):', binSize
     print 'epsilon:', epsilon
 
     counter = 0
+    dom_index = len(data[counter])-1
     while counter < lineNumber:
         n = 1
         bin = {"lo": float(data[counter][i]), "hi": float(data[counter][i])}
-
+        #Getting list of dependent variable/domination value for each row in a bin
+        tmp_list = [float(data[counter][dom_index])]
         while (counter+1 < lineNumber) and \
                 (((bin["hi"] - bin["lo"]) < epsilon) or \
                 (n < binSize) or \
                 (float(data[counter + 1][i]) - bin["hi"] < epsilon) or \
                 (bin["hi"] - bin["lo"] < epsilon)):
             bin["hi"] = float(data[counter + 1][i])
+            #Getting list of dependent variable/domination value for each row in a bin
+            tmp_list.append(float(data[counter + 1][dom_index]))
             n += 1
             counter += 1
-
-        bins += [{"lo": bin["lo"], "hi": bin["hi"], "span": bin["hi"]-bin["lo"], "n": n}]
+        #Each bin now contains the median value of domination index
+        bins += [{"lo": bin["lo"], "hi": bin["hi"], "span": bin["hi"]-bin["lo"], "n": n, "median":np.median(tmp_list)}]
         counter += 1
+
     
     # checking last bin
     if len(bins) > 1 and bins[-1]["hi"] - bins[-1]["lo"] < epsilon:
