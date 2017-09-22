@@ -314,11 +314,8 @@ else:
     ud = unsupervisedDiscretization(data, headers, int(sys.argv[2]))
     sortedData = ud["sortedData"]
     bins = ud["bins"]
-    # for r in bins:
-    #     print r
     for i,r in enumerate(bins):
         print 'x    ',i+1,'{ span = ', r.get('span'),', lo= ',r.get('lo'),' n= ',r.get('n'),' hi= ',r.get('hi'),'} median: ',r.get('median')
-        #print 'x    ',i+1,'{ span = ', r.get('span'),', lo= ',r.get('lo'),' n= ',r.get('n'),' hi= ',r.get('hi'),'}'
     supervisedBins = combineBins(bins)
     if len(supervisedBins) < len(bins):
         print 'We have fewer supervised ranges :)'
