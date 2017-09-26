@@ -244,7 +244,7 @@ def unsupervisedDiscretization(data, headers, i):
     print 'epsilon:', epsilon
 
     counter = 0
-    dom_index = len(data[counter])-1
+    dom_index = len(data[counter])-2
     while counter < lineNumber:
         n = 1
         bin = {"lo": float(data[counter][i]), "hi": float(data[counter][i])}
