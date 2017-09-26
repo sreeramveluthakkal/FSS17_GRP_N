@@ -1,7 +1,7 @@
-Sreerams-MacBook-Pro:HW3 sreeram$ python c.py test.csv 0
+Aswins-MacBook-Pro:HW3 aswinak$ python c.py test.csv 0 .1
 [{'count': 100, 'mu': 0.5520253599999998, 'name': 'column', 'weight': 0, 'min': 0.000778, 'max': 0.984887, 'ignore': False, 'typeof': 'NUM', 'm2': 8.603959764175038, 'sd': 0.294802789143211, 'goal': False}, {'count': 100, 'mu': 0.6819509299999998, 'name': 'goal', 'weight': -1, 'min': 0.20059, 'max': 0.909626, 'ignore': False, 'typeof': 'NUM', 'm2': 7.024054055156511, 'sd': 0.26636448892669023, 'goal': True}]
 Number of lines of valid data: 100
---- 0.0369930267334 seconds ---
+--- 0.0250639915466 seconds ---
 Printing the top and bottom ten rows, as sorted by their dom score, with the top 5 and the bottom 5 domination scores:
 column, goal, Rank
 TOP 5 DATA RANKED BY DOMINATION SCORE (ASC)
@@ -19,11 +19,12 @@ BOTTOM 5 DATA RANKED BY DOMINATION SCORE (DESC)
 
 We have many unsupervised ranges.
 bin size (i.e. sqrt(n)): 10
-epsilon: 0.0589605578286
-x     1 { span =  0.309015 , lo=  0.000778  n=  28  hi=  0.309793 } median:  86.5
-x     2 { span =  0.608201 , lo=  0.376686  n=  72  hi=  0.984887 } median:  36.5
-We have the same number of supervised ranges :(
+epsilon: 0.0294802789143
+x     1 { span =  0.309015 , lo=  0.000778  n=  28  hi=  0.309793 } median:  0.206752
+x     2 { span =  0.068227 , lo=  0.376686  n=  11  hi=  0.444913 } median:  0.604927
+x     3 { span =  0.132108 , lo=  0.499503  n=  14  hi=  0.631611 } median:  0.608308
+x     4 { span =  0.319945 , lo=  0.664942  n=  47  hi=  0.984887 } median:  0.903911
+We have fewer supervised ranges :)
 super     1   {label=  1 , most=  0.309793 }
-super     2   {label=  2 , most=  0.984887 }
-
-Please see output.txt in current directory for the sorted valid read data sorted by domination rank.
+super     2   {label=  2 , most=  0.631611 }
+super     3   {label=  3 , most=  0.984887 }
