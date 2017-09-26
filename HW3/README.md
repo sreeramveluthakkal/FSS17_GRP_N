@@ -22,7 +22,7 @@ Combine ranges where some dependent variable is not changed across that combinat
 `python c.py <inputfile> <column index> [small value]`  
 For example `python c.py auto.csv 1 .1`  
 NOTE:
-Column index starts from 0.
+Column index starts from 0 and indicates which column the discretisation should be done on. 
 The last argument is optional and is the 'cohen' i.e. the multiplier for standard deviation in calculating epsilon.
 
 The following output looks at the second column - displacement - in auto.csv. The 'median' is the median of the domination ranks of the corresponding bins. The cohen used is the default value of 0.2.
