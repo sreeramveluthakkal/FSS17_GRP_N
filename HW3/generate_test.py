@@ -16,7 +16,8 @@ if __name__ == '__main__':
     random.seed(random.randint(0,1000))
     arr = []
     with open("test_sample.csv","w+") as fp:
+        fp.write("$column,<goal\n")
         for i in range(N):
             x = random.random()
             y = klass(x)
-            fp.write("%f %f\n"%(x,y))
+            fp.write("%f,%f\n"%(x,y))
