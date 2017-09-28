@@ -211,7 +211,6 @@ def combineBins(bins):
                 most = bins[j].get('hi')
                 binValues += bins[j].get('values')
                 # get median of the combined ranges and update the new median and contents of the range
-                currentMedian = np.median(binValues)
                 bins[j]["median"] = currentMedian
                 bins[j]["values"] = binValues
                 j = j + 1
@@ -266,6 +265,30 @@ def unsupervisedDiscretization(data, headers, i, cohen, useDom):
 
     return {"bins": bins, "sortedData": data}
 
+def createRegressionTree(data, headers):
+    index = 0
+    while index < len(headers):
+        if(headers[index]['goal']==False and headers[index]['typeof']=='NUM' and headers[index]['ignore']==False):
+            # ud = unsupervisedDiscretization(data, headers, index, float(sys.argv[2]), int(sys.argv[3]))
+            # sortedData = ud["sortedData"]
+            # bins = ud["bins"]
+            # supervisedBins = combineBins(bins)
+            # print 'We have many unsupervised ranges.'
+            print '\n\n-----splitting by column',headers[index]["name"]
+            ud = unsupervisedDiscretization(data, headers, index, float(sys.argv[2]), int(sys.argv[3]))
+            sortedData = ud["sortedData"]
+            bins = ud["bins"]
+            for i,r in enumerate(bins):
+                print 'x    ',i+1,'{ span = ', r.get('span'),', lo= ',r.get('lo'),' n= ',r.get('n'),' hi= ',r.get('hi'),'} median: ',r.get('median')
+            supervisedBins = combineBins(bins)
+            if len(supervisedBins) < len(bins):
+                print 'We have fewer supervised ranges :)'
+            else:
+                print 'We have the same number of supervised ranges :('
+            for i,r in enumerate(supervisedBins):
+                print 'super    ',i+1,'  {label= ',r.get('label'),', most= ',r.get('most'),', median= ',r.get('median'),'}'
+        index += 1
+
 ## Running the script
 if len(sys.argv) < 5:
     print 'Usage: python d.py <inputfile> <small value> <useDom> <tooFew>'
@@ -282,46 +305,14 @@ else:
     print '\n\n\n ############# SOME DATA STATS #############'
     print 'Number of lines of valid data:', lineCount
     
-    #write data to terminal
-    # print 'Printing the top and bottom ten rows, as sorted by their dom score, with the top 5 and the bottom 5 domination scores:'
-    # for header in headers:
-        # print (header["name"] + ','),
-    # print 'Rank' 
-    # print 'TOP 5 DATA RANKED BY DOMINATION SCORE (ASC)'
-    # index = 0
-    # while index < min(5,len(data)):
-        # print str(data[index])
-        # index += 1
-    # print 'BOTTOM 5 DATA RANKED BY DOMINATION SCORE (DESC)'
-    # index = len(data)-1
-    # bottomFive = ""
-    # while index > len(data)-min(6,len(data)):
-        # bottomFive = str(data[index]) + '\n' + bottomFive
-        # index -= 1
-    # print bottomFive
-
-    # print 'We have many unsupervised ranges.'
-    column = 2
-    # print '-----splitting by column',headers[column]["name"]
-    ud = unsupervisedDiscretization(data, headers, column, float(sys.argv[2]), int(sys.argv[3]))
-    sortedData = ud["sortedData"]
-    bins = ud["bins"]
-    # for i,r in enumerate(bins):
-        # print 'x    ',i+1,'{ span = ', r.get('span'),', lo= ',r.get('lo'),' n= ',r.get('n'),' hi= ',r.get('hi'),'} median: ',r.get('median')
-    supervisedBins = combineBins(bins)
-    # if len(supervisedBins) < len(bins):
-        # print 'We have fewer supervised ranges :)'
-    # else:
-        # print 'We have the same number of supervised ranges :('
-    # for i,r in enumerate(supervisedBins):
-        # print 'super    ',i+1,'  {label= ',r.get('label'),', most= ',r.get('most'),'}'
+    createRegressionTree(data, headers)
     print("\n\n\n--- Total execution time: %s seconds ---" % (time.time() - start_time))
 #write data to file
 f = open('output.txt', 'w')
 for header in headers:
     f.write(header["name"] + ',')
 f.write('Rank\n')
-for row in sortedData:
+for row in data:
     f.write(str(row) + '\n')
 f.close()
-print '\nNOTE: See output.txt in current directory for the sorted valid read data sorted by domination rank.'
+print '\nNOTE: See output.txt in current directory for the valid read data sorted by domination rank.'
