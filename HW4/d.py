@@ -252,9 +252,7 @@ def unsupervisedDiscretization(data, headers, i):
         tmp_list = [float(data[counter][dom_index])]
         while (counter+1 < lineNumber) and \
                 (((bin["hi"] - bin["lo"]) < epsilon) or \
-                (n < binSize) or \
-                (float(data[counter + 1][i]) - bin["hi"] < epsilon) or \
-                (bin["hi"] - bin["lo"] < epsilon)):
+                (n < binSize)):
             bin["hi"] = float(data[counter + 1][i])
             #Getting list of dependent variable/domination value for each row in a bin
             tmp_list.append(float(data[counter + 1][dom_index]))
