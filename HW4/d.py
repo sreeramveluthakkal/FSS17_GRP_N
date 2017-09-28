@@ -206,21 +206,24 @@ def combineBins(bins):
         j = i + 1
         currentMedian = bins[i].get('median')
         binValues = bins[i].get('values')
+        sub_set = bins[i].get('subSet')
         while(j<binCount):
             if abs(currentMedian - bins[j].get('median')) < epsilon:
                 most = bins[j].get('hi')
                 binValues += bins[j].get('values')
+                sub_set += bins[j].get('subSet')
                 # get median of the combined ranges and update the new median and contents of the range
                 bins[j]["median"] = currentMedian
                 bins[j]["values"] = binValues
+                bins[j]["subSet"] = sub_set
                 j = j + 1
             else:
                 break
-        supeviseddRanges += [{"label": label, "most":most}]
+        supeviseddRanges += [{"label": label, "most":most, "subSet":sub_set}]
         i = j
         label = label + 1
     if i == binCount-1:
-        supeviseddRanges += [{"label": label, "most":bins[i].get('hi')}]
+        supeviseddRanges += [{"label": label, "most":bins[i].get('hi'), "subSet":bins[i].get('subSet')}]
     return supeviseddRanges
 
 def unsupervisedDiscretization(data, headers, i, cohen, useDom):
@@ -244,16 +247,18 @@ def unsupervisedDiscretization(data, headers, i, cohen, useDom):
         bin = {"lo": float(data[counter][i]), "hi": float(data[counter][i])}
         #Getting list of dependent variable/domination value for each row in a bin
         tmp_list = [float(data[counter][dom_index])]
+        sub_set = [data[counter]]
         while (counter+1 < lineNumber) and \
                 (((bin["hi"] - bin["lo"]) < epsilon) or \
                 (n < binSize)):
             bin["hi"] = float(data[counter + 1][i])
             #Getting list of dependent variable/domination value for each row in a bin
             tmp_list.append(float(data[counter + 1][dom_index]))
+            sub_set.append(data[counter+1])
             n += 1
             counter += 1
         #Each bin now contains the median value of domination index
-        bins += [{"lo": bin["lo"], "hi": bin["hi"], "span": bin["hi"]-bin["lo"], "n": n, "median":np.median(tmp_list),"values":tmp_list}]
+        bins += [{"lo": bin["lo"], "hi": bin["hi"], "span": bin["hi"]-bin["lo"], "n": n, "median":np.median(tmp_list),"values":tmp_list, "subSet":sub_set}]
         counter += 1
 
     
@@ -286,7 +291,7 @@ def createRegressionTree(data, headers):
             else:
                 print 'We have the same number of supervised ranges :('
             for i,r in enumerate(supervisedBins):
-                print 'super    ',i+1,'  {label= ',r.get('label'),', most= ',r.get('most'),', median= ',r.get('median'),'}'
+                print 'super    ',i+1,'  {label= ',r.get('label'),', most= ',r.get('most'),', median= ',r.get('median'),'}','DATA:\n',r.get('subSet'),'\n'
         index += 1
 
 ## Running the script
