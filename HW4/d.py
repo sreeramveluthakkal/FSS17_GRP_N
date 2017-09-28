@@ -181,19 +181,14 @@ def parse (filename):
                     data.append(lineList)
                     updateHeaders(lineList, headers)
             lineNumber += 1
-    print headers
+    # print headers
     for i,row in enumerate(data):
         data[i].append(dom(i,row,data,headers,numgoals)) #append domination rank to row
     data.sort(key=lambda x: x[len(data)-1],reverse=True) #sort by last column
     return {'headers': headers, 'data': data, 'fileLineCount': lineNumber}
 
-## Part 3
-
-# data: [[]]
-# i: index to sort on
 def sortData(data, i):
     return sorted(data, key=lambda x: float(x[i]))
-
 
 def combineBins(bins):
     # calculating epsilon based on SD of dependent variable
@@ -229,22 +224,22 @@ def combineBins(bins):
         supeviseddRanges += [{"label": label, "most":bins[i].get('hi')}]
     return supeviseddRanges
 
-
-def unsupervisedDiscretization(data, headers, i):
+def unsupervisedDiscretization(data, headers, i, cohen, useDom):
     data = sortData(data, i)
     lineNumber = len(data)
     binSize = int(math.floor(math.sqrt(lineNumber)))
     bins = []
-    small_value = 0.2
-    if len(sys.argv)>3:
-        small_value = float(sys.argv[3])    
+    #small_value = 0.2
+    small_value = cohen    
 
     epsilon = small_value* headers[i]["sd"]
-    print 'bin size (i.e. sqrt(n)):', binSize
-    print 'epsilon:', epsilon
+    # print 'bin size (i.e. sqrt(n)):', binSize
+    # print 'epsilon:', epsilon
 
     counter = 0
-    dom_index = len(data[counter])-1
+    dom_index = len(data[counter]) - 1
+    if useDom != 1:
+        dom_index-=1
     while counter < lineNumber:
         n = 1
         bin = {"lo": float(data[counter][i]), "hi": float(data[counter][i])}
@@ -271,11 +266,9 @@ def unsupervisedDiscretization(data, headers, i):
 
     return {"bins": bins, "sortedData": data}
 
-
-
 ## Running the script
-if len(sys.argv) < 3:
-    print 'Usage: python b.py <filename> <column index>'
+if len(sys.argv) < 5:
+    print 'Usage: python d.py <inputfile> <small value> <useDom> <tooFew>'
     exit(1)
 
 else:
@@ -286,42 +279,43 @@ else:
     data = results['data']
     headers = results['headers']
     lineCount = len(data)
+    print '\n\n\n ############# SOME DATA STATS #############'
     print 'Number of lines of valid data:', lineCount
-    print("--- %s seconds ---" % (time.time() - start_time))
-
+    
     #write data to terminal
-    print 'Printing the top and bottom ten rows, as sorted by their dom score, with the top 5 and the bottom 5 domination scores:'
-    for header in headers:
-        print (header["name"] + ','),
-    print 'Rank' 
-    print 'TOP 5 DATA RANKED BY DOMINATION SCORE (ASC)'
-    index = 0
-    while index < min(5,len(data)):
-        print str(data[index])
-        index += 1
-    print 'BOTTOM 5 DATA RANKED BY DOMINATION SCORE (DESC)'
-    index = len(data)-1
-    bottomFive = ""
-    while index > len(data)-min(6,len(data)):
-        bottomFive = str(data[index]) + '\n' + bottomFive
-        index -= 1
-    print bottomFive
+    # print 'Printing the top and bottom ten rows, as sorted by their dom score, with the top 5 and the bottom 5 domination scores:'
+    # for header in headers:
+        # print (header["name"] + ','),
+    # print 'Rank' 
+    # print 'TOP 5 DATA RANKED BY DOMINATION SCORE (ASC)'
+    # index = 0
+    # while index < min(5,len(data)):
+        # print str(data[index])
+        # index += 1
+    # print 'BOTTOM 5 DATA RANKED BY DOMINATION SCORE (DESC)'
+    # index = len(data)-1
+    # bottomFive = ""
+    # while index > len(data)-min(6,len(data)):
+        # bottomFive = str(data[index]) + '\n' + bottomFive
+        # index -= 1
+    # print bottomFive
 
-    print 'We have many unsupervised ranges.'
-    # Note: Change the third column to run unsupervised discretization on other columns
-    ud = unsupervisedDiscretization(data, headers, int(sys.argv[2]))
+    # print 'We have many unsupervised ranges.'
+    column = 2
+    # print '-----splitting by column',headers[column]["name"]
+    ud = unsupervisedDiscretization(data, headers, column, float(sys.argv[2]), int(sys.argv[3]))
     sortedData = ud["sortedData"]
     bins = ud["bins"]
-    for i,r in enumerate(bins):
-        print 'x    ',i+1,'{ span = ', r.get('span'),', lo= ',r.get('lo'),' n= ',r.get('n'),' hi= ',r.get('hi'),'} median: ',r.get('median')
+    # for i,r in enumerate(bins):
+        # print 'x    ',i+1,'{ span = ', r.get('span'),', lo= ',r.get('lo'),' n= ',r.get('n'),' hi= ',r.get('hi'),'} median: ',r.get('median')
     supervisedBins = combineBins(bins)
-    if len(supervisedBins) < len(bins):
-        print 'We have fewer supervised ranges :)'
-    else:
-        print 'We have the same number of supervised ranges :('
-    for i,r in enumerate(supervisedBins):
-        print 'super    ',i+1,'  {label= ',r.get('label'),', most= ',r.get('most'),'}'
-
+    # if len(supervisedBins) < len(bins):
+        # print 'We have fewer supervised ranges :)'
+    # else:
+        # print 'We have the same number of supervised ranges :('
+    # for i,r in enumerate(supervisedBins):
+        # print 'super    ',i+1,'  {label= ',r.get('label'),', most= ',r.get('most'),'}'
+    print("\n\n\n--- Total execution time: %s seconds ---" % (time.time() - start_time))
 #write data to file
 f = open('output.txt', 'w')
 for header in headers:
@@ -330,4 +324,4 @@ f.write('Rank\n')
 for row in sortedData:
     f.write(str(row) + '\n')
 f.close()
-print '\nPlease see output.txt in current directory for the sorted valid read data sorted by domination rank.'
+print '\nNOTE: See output.txt in current directory for the sorted valid read data sorted by domination rank.'
