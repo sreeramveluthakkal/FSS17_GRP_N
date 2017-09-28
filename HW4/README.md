@@ -30,9 +30,13 @@ The arguments are described below.
 `<tooFew>` an integer which sets the recursion end conditions based on the number of examples to break.   
 
 ### Sample Output
-COMMAND: `python d.py auto.csv 0.2 1 10`  
-DESCRIPTION: This is the test case given in the question. RUn the decision tree learner on auto.csv with cohen value as 0.2, using dom to find breaks at each level of the tree, and using tooFew as 10 as the minimum number of examples needed at each level.  
-OUTPUT:  
+__COMMAND__: `python d.py auto.csv 0.2 1 10`  
+__DESCRIPTION__: This is the test case given in the question.  
+- run the decision tree learner on auto.csv  
+- with cohen value as 0.2  
+- using dom to find breaks at each level of the tree and  
+- using tooFew as 10 as the minimum number of examples needed at each level.  
+__OUTPUT__:  
 
 ### Contributors
 Aswin Anil Kumar,  
