@@ -5,10 +5,10 @@
 Building a regression tree learner:
 
 Apply supervised Discretization
-At each level of the tree, break the data on the ranges and find the column whose breaks most reduces the variability of the target variable (we will use dom).
-For each break, apply the regression tree learner recursively.
-Recursion stops when the breaks do not improve the supervised target score, when there are tooFew examples to break, or when the tree depth is too much.
-Write a list printer that recurses down the tree and prints details about each node, indented by its level in tree.
+At each level of the tree, break the data on the ranges and find the column whose breaks most reduces the variability of the target variable (use dom).  
+For each break, apply the regression tree learner recursively.  
+Recursion stops when the breaks do not improve the supervised target score, when there are too few examples to break, or when the tree depth is too much.
+Write a list printer that recurses down the tree and prints details about each node, indented by its level in tree.  
 
 Test: run your decision tree learner on auto.csv. Using dom and tooFew is 10, the auto.csv divides into something like this:
 
@@ -20,14 +20,15 @@ Test: run your decision tree learner on auto.csv. Using dom and tooFew is 10, th
 `Python 2.7`
 
 ### Building
-`python d.py <inputfile> <column index> <small value>`  
-For example `python d.py auto.csv 1` (default value of cohen used is 0.2. Read Note below)
-(or) For example `python d.py auto.csv 1 .1`  
+`python d.py <inputfile> <small value>`  
+`<small value>` is optional cohen value and is a value <= 1.
+For example `python d.py auto.csv` (default value of cohen used is 0.2. Read Note below)  
+(or) For example `python d.py auto.csv .1` (use cohen 0.1)
 NOTE:
 Column index starts from 0.
-The last argument is optional and is the 'cohen' i.e. the multiplier for standard deviation in calculating epsilon.
-
-The following output looks at the second column - displacement - in auto.csv. The 'median' is the median of the domination ranks of the corresponding bins. The cohen used is the default value of 0.2.
+The last argument is optional and is the 'cohen' i.e. the multiplier for standard deviation in calculating epsilon.  
+  
+The following output looks at the second column - displacement - in auto.csv.  The 'median' is the median of the domination ranks of the corresponding bins.  
 `python d.py auto.csv 1`
 
 ### Sample Output
