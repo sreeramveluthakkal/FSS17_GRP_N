@@ -31,14 +31,15 @@ The arguments are described below.
 `<maxDepth>` of tree. An integer which denotes the depth of tree. Root counted as level 1 and leal level is n of a tree of depth n.  
 
 ### Sample Output
-__COMMAND__: `python d.py auto.csv 0.2 1 10`  
+__COMMAND__: `python d.py auto.csv 0.2 1 10 3`  
 __DESCRIPTION__: This is the test case given in the question.  
 - run the decision tree learner on auto.csv  
 - with cohen value as 0.2  
 - using dom to find breaks at each level of the tree and  
 - using tooFew as 10 as the minimum number of examples needed at each level.  
+- max depth is 3 levels including root node.  
 __OUTPUT__:  
-INPUT: python d.py auto.csv 0.2 1 10 3
+INPUT: python d.py auto.csv 0.2 1 10 3  
 err: unexpected data found in line: 179  
 err: unexpected data found in line: 208  
 err: unexpected data found in line: 211  
