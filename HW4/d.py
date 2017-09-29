@@ -270,25 +270,41 @@ def unsupervisedDiscretization(data, headers, i, cohen, useDom):
 
     return {"bins": bins, "sortedData": data}
 
-def findColumnToSplit(data,splitColumns):
+def findColumnToSplit(data,splitColumns,tooFew):
     index = 0
     minNumBins = float('inf')
     minIndex = 0
     superBins = []
+    # print '^',len(data)
     while index < len(headers):
-        if(headers[index]['goal']==False and headers[index]['typeof']=='NUM' and headers[index]['ignore']==False and index not in splitColumns):
+        if(len(data)>tooFew and headers[index]['goal']==False and headers[index]['typeof']=='NUM' and headers[index]['ignore']==False and index not in splitColumns):
             ud = unsupervisedDiscretization(data, headers, index, float(sys.argv[2]), int(sys.argv[3]))
             sortedData = ud["sortedData"]
             bins = ud["bins"]
             supervisedBins = combineBins(bins)
+            # print '*',headers[index]["name"],len(supervisedBins)
+            # for _,r in enumerate(supervisedBins):
+            #         print len(r.get('subSet'))
             if(len(supervisedBins)<minNumBins):
                 minNumBins=len(supervisedBins)
                 minIndex=index
                 del superBins[:]
-                for _,r in enumerate(supervisedBins):
-                    superBins.append(r.get('subSet'));
+                for bindid,r in enumerate(supervisedBins):
+                    if(len(r.get('subSet'))>tooFew):
+                        temp = r.get("subSet")
+                        temp.append(bindid+1)
+                        superBins.append(temp)
         index += 1
     return minIndex,superBins
+
+def datastats(data):
+    dataTranspose = zip(*data)
+    ranks = dataTranspose[len(dataTranspose)-1]
+    [float(i) for i in ranks]
+    lineCount = float(len(data))
+    mu = float(reduce(lambda x, y: x + y, ranks) / float(len(ranks)))
+    stddev = float(np.std(ranks,ddof=1))
+    return lineCount, mu, stddev
 
 def createRegressionTree(data, headers, treelevel, splitColumns):
     index = 0
@@ -296,25 +312,32 @@ def createRegressionTree(data, headers, treelevel, splitColumns):
     tooFew = int(sys.argv[4])
     maxDepth = int(sys.argv[5])
     if (len(data)<tooFew):
+        linecount, mu, stddev = datastats(data)
+        print "n=%s mu=%-.2f sd=%-.2f"%(lineCount, mu, stddev)
         return
-
     #find initial split for the tree
-    index, superBins = findColumnToSplit(data,splitColumns)
+    index, superBins = findColumnToSplit(data,splitColumns,tooFew)
     if not superBins:
+        linecount, mu, stddev = datastats(data)
+        print "n=%s mu=%-.2f sd=%-.2f"%(lineCount, mu, stddev)
         return
+    print '\n',
+    if (treelevel>0):
+        superBins.sort(key = len,reverse=True)
     splitColumns.append(index)
-    treelevel+=1;
-
-    if (treelevel>maxDepth-1):
-        return
-
+    treelevel+=1
+    if (treelevel>maxDepth):
+        return " "
+    temp = splitColumns[:]
     for i,currBin in enumerate(superBins):
-            print '|'*treelevel,headers[index]["name"],'=',i,'\t\t:'
-            createRegressionTree(currBin, headers, treelevel, splitColumns)
-    # while treelevel<maxDepth:
-    #     del superBins[:]
+        splitColumns = temp[:]
+        print '|'*(treelevel-1)+headers[index]["name"]+'='+str(currBin[-1])+'\t\t:\t\t',
+        # leafstats = 
+        createRegressionTree(currBin[:len(currBin)-1], headers, treelevel, splitColumns)
+        # if not leafstats:
+        #     print leafstats
+        # for p in splitColumns: print '##',p
         
-        #for ind in splitColumns: 
 
 ## Running the script
 if len(sys.argv) < 6:
@@ -331,7 +354,9 @@ else:
     lineCount = float(len(data))
 
     print '\n\n\n############# REGRESSION TREE #############'
-    print "in=%s mu=%-.2f sd=%-.2f"%(lineCount, (lineCount-1)/2, math.sqrt(((lineCount**2)-1)/12)) #TODO check stddev
+    linecount, mu, stddev = datastats(data)
+    print "in=%s mu=%-.2f sd=%-.2f"%(lineCount, mu, stddev),
+    # print "in=%s mu=%-.2f sd=%-.2f"%(lineCount, (lineCount-1)/2, math.sqrt(((lineCount**2)-1)/12)) #TODO check stddev
     createRegressionTree(data, headers, 0, [])
 
     print '\n\n\n############# SOME STATS #############'
@@ -340,7 +365,7 @@ else:
 #write data to file
 f = open('output.txt', 'w')
 for header in headers:
-    f.write(header["name"] + ',')
+    f.write(header["name"]+'-'+header["typeof"] + ',')
 f.write('Rank\n')
 for row in data:
     f.write(str(row) + '\n')
