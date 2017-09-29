@@ -50,32 +50,32 @@ err: unexpected data found in line: 392
   
   
 ############# REGRESSION TREE #############  
-in=392.0 mu=196.50 sd=113.30   
+in=392 mu=196.50 sd=113.30   
 horsepower=1		:		  
-|displacement=2		:		n=392.0 mu=353.86 sd=27.23  
-|displacement=1		:		n=392.0 mu=363.00 sd=24.95  
+|displacement=2		:		n=29 mu=353.86 sd=27.23  
+|displacement=1		:		n=21 mu=363.00 sd=24.95  
 horsepower=2		:		  
 |displacement=2		:		  
-||model=2			:		n=392.0 mu=301.46 sd=29.09  
-||model=3			:		n=392.0 mu=291.17 sd=34.62  
-|displacement=1		:		n=392.0 mu=319.67 sd=42.94  
-|displacement=3		:		n=392.0 mu=270.00 sd=42.05  
+||model=2			:		n=13 mu=301.46 sd=29.09  
+||model=3			:		n=12 mu=291.17 sd=34.62  
+|displacement=1		:		n=18 mu=319.67 sd=42.94  
+|displacement=3		:		n=14 mu=270.00 sd=42.05  
 horsepower=3		:		  
 |displacement=2		:		  
-||model=1			:		n=392.0 mu=226.42 sd=41.97  
+||model=1			:		n=12 mu=226.42 sd=41.97  
 horsepower=4		:		  
-|displacement=2		:		n=392.0 mu=209.25 sd=38.66  
-|displacement=4		:		n=392.0 mu=168.27 sd=28.86  
+|displacement=2		:		n=12 mu=209.25 sd=38.66  
+|displacement=4		:		n=11 mu=168.27 sd=28.86  
 horsepower=5		:		  
-|displacement=4		:		n=392.0 mu=142.29 sd=21.71  
-|displacement=5		:		n=392.0 mu=124.56 sd=30.48  
+|displacement=4		:		n=24 mu=142.29 sd=21.71  
+|displacement=5		:		n=16 mu=124.56 sd=30.48  
 horsepower=6		:		  
-|displacement=3		:		n=392.0 mu=79.39 sd=17.58  
+|displacement=3		:		n=18 mu=79.39 sd=17.58  
 horsepower=7		:		  
-|displacement=3		:		n=392.0 mu=40.89 sd=20.46  
-|displacement=2		:		n=392.0 mu=56.46 sd=22.16  
+|displacement=3		:		n=18 mu=40.89 sd=20.46  
+|displacement=2		:		n=13 mu=56.46 sd=22.16  
 horsepower=8		:		  
-|model=1			:		n=392.0 mu=28.55 sd=20.80  
+|model=1			:		n=11 mu=28.55 sd=20.80  
   
 
 

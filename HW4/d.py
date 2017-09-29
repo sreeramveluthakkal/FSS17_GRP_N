@@ -312,7 +312,7 @@ def createRegressionTree(data, headers, treelevel, splitColumns):
     tooFew = int(sys.argv[4])
     maxDepth = int(sys.argv[5])
     if (len(data)<tooFew):
-        linc, mu, stddev = datastats(data)
+        linec, mu, stddev = datastats(data)
         print "n=%d mu=%-.2f sd=%-.2f"%(linec, mu, stddev)
         return
     #find initial split for the tree
