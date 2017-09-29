@@ -219,11 +219,11 @@ def combineBins(bins):
                 j = j + 1
             else:
                 break
-        supeviseddRanges += [{"label": label, "most":most, "subSet":sub_set}]
+        supeviseddRanges += [{"label": label, "most":most, "median":bins[i].get('median'), "subSet":sub_set}]
         i = j
         label = label + 1
     if i == binCount-1:
-        supeviseddRanges += [{"label": label, "most":bins[i].get('hi'), "subSet":bins[i].get('subSet')}]
+        supeviseddRanges += [{"label": label, "most":bins[i].get('hi'), "median":bins[i].get('median'), "subSet":bins[i].get('subSet')}]
     return supeviseddRanges
 
 def unsupervisedDiscretization(data, headers, i, cohen, useDom):
@@ -270,33 +270,55 @@ def unsupervisedDiscretization(data, headers, i, cohen, useDom):
 
     return {"bins": bins, "sortedData": data}
 
-def createRegressionTree(data, headers):
+def findColumnToSplit(data,splitColumns):
     index = 0
+    minNumBins = float('inf')
+    minIndex = 0
+    superBins = []
     while index < len(headers):
-        if(headers[index]['goal']==False and headers[index]['typeof']=='NUM' and headers[index]['ignore']==False):
-            # ud = unsupervisedDiscretization(data, headers, index, float(sys.argv[2]), int(sys.argv[3]))
-            # sortedData = ud["sortedData"]
-            # bins = ud["bins"]
-            # supervisedBins = combineBins(bins)
-            # print 'We have many unsupervised ranges.'
-            print '\n\n-----splitting by column',headers[index]["name"]
+        if(headers[index]['goal']==False and headers[index]['typeof']=='NUM' and headers[index]['ignore']==False and index not in splitColumns):
             ud = unsupervisedDiscretization(data, headers, index, float(sys.argv[2]), int(sys.argv[3]))
             sortedData = ud["sortedData"]
             bins = ud["bins"]
-            for i,r in enumerate(bins):
-                print 'x    ',i+1,'{ span = ', r.get('span'),', lo= ',r.get('lo'),' n= ',r.get('n'),' hi= ',r.get('hi'),'} median: ',r.get('median')
             supervisedBins = combineBins(bins)
-            if len(supervisedBins) < len(bins):
-                print 'We have fewer supervised ranges :)'
-            else:
-                print 'We have the same number of supervised ranges :('
-            for i,r in enumerate(supervisedBins):
-                print 'super    ',i+1,'  {label= ',r.get('label'),', most= ',r.get('most'),', median= ',r.get('median'),'}','DATA:\n',r.get('subSet'),'\n'
+            if(len(supervisedBins)<minNumBins):
+                minNumBins=len(supervisedBins)
+                minIndex=index
+                del superBins[:]
+                for _,r in enumerate(supervisedBins):
+                    superBins.append(r.get('subSet'));
         index += 1
+    return minIndex,superBins
+
+def createRegressionTree(data, headers, treelevel, splitColumns):
+    index = 0
+    superBins = []
+    tooFew = int(sys.argv[4])
+    maxDepth = int(sys.argv[5])
+    if (len(data)<tooFew):
+        return
+
+    #find initial split for the tree
+    index, superBins = findColumnToSplit(data,splitColumns)
+    if not superBins:
+        return
+    splitColumns.append(index)
+    treelevel+=1;
+
+    if (treelevel>maxDepth-1):
+        return
+
+    for i,currBin in enumerate(superBins):
+            print '|'*treelevel,headers[index]["name"],'=',i,'\t\t:'
+            createRegressionTree(currBin, headers, treelevel, splitColumns)
+    # while treelevel<maxDepth:
+    #     del superBins[:]
+        
+        #for ind in splitColumns: 
 
 ## Running the script
-if len(sys.argv) < 5:
-    print 'Usage: python d.py <inputfile> <small value> <useDom> <tooFew>'
+if len(sys.argv) < 6:
+    print 'Usage: python d.py <inputfile> <small value> <useDom> <tooFew> <maxDepth>'
     exit(1)
 
 else:
@@ -306,12 +328,15 @@ else:
     results = parse(sys.argv[1])
     data = results['data']
     headers = results['headers']
-    lineCount = len(data)
-    print '\n\n\n ############# SOME DATA STATS #############'
+    lineCount = float(len(data))
+
+    print '\n\n\n############# REGRESSION TREE #############'
+    print "in=%s mu=%-.2f sd=%-.2f"%(lineCount, (lineCount-1)/2, math.sqrt(((lineCount**2)-1)/12)) #TODO check stddev
+    createRegressionTree(data, headers, 0, [])
+
+    print '\n\n\n############# SOME STATS #############'
     print 'Number of lines of valid data:', lineCount
-    
-    createRegressionTree(data, headers)
-    print("\n\n\n--- Total execution time: %s seconds ---" % (time.time() - start_time))
+    print ("Total execution time: %s seconds ---" % (time.time() - start_time))
 #write data to file
 f = open('output.txt', 'w')
 for header in headers:
@@ -320,4 +345,4 @@ f.write('Rank\n')
 for row in data:
     f.write(str(row) + '\n')
 f.close()
-print '\nNOTE: See output.txt in current directory for the valid read data sorted by domination rank.'
+print 'NOTE: See output.txt in current directory for the valid read data sorted by domination rank.'
