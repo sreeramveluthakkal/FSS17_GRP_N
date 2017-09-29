@@ -312,14 +312,14 @@ def createRegressionTree(data, headers, treelevel, splitColumns):
     tooFew = int(sys.argv[4])
     maxDepth = int(sys.argv[5])
     if (len(data)<tooFew):
-        linecount, mu, stddev = datastats(data)
-        print "n=%s mu=%-.2f sd=%-.2f"%(lineCount, mu, stddev)
+        linc, mu, stddev = datastats(data)
+        print "n=%d mu=%-.2f sd=%-.2f"%(linec, mu, stddev)
         return
     #find initial split for the tree
     index, superBins = findColumnToSplit(data,splitColumns,tooFew)
     if not superBins:
-        linecount, mu, stddev = datastats(data)
-        print "n=%s mu=%-.2f sd=%-.2f"%(lineCount, mu, stddev)
+        linec, mu, stddev = datastats(data)
+        print "n=%d mu=%-.2f sd=%-.2f"%(linec, mu, stddev)
         return
     print '\n',
     if (treelevel>0):
@@ -355,7 +355,7 @@ else:
 
     print '\n\n\n############# REGRESSION TREE #############'
     linecount, mu, stddev = datastats(data)
-    print "in=%s mu=%-.2f sd=%-.2f"%(lineCount, mu, stddev),
+    print "in=%d mu=%-.2f sd=%-.2f"%(lineCount, mu, stddev),
     # print "in=%s mu=%-.2f sd=%-.2f"%(lineCount, (lineCount-1)/2, math.sqrt(((lineCount**2)-1)/12)) #TODO check stddev
     createRegressionTree(data, headers, 0, [])
 
