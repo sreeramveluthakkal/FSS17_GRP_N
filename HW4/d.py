@@ -281,17 +281,36 @@ def unsupervisedDiscretization(data, headers, i, cohen, useDom):
 
 def binVarianceNUM(bin, index):
     data = [float(row[index]) for row in bin]
-    # print '>>>DATA: ', data
+    # print ' index: ',index,'>>>DATA: ', data, 'var: ',np.var(data)
     return np.var(data)
     
+def binVarianceSYM(bin, index):
+    data = [row[index] for row in bin]
+    total_count = len(data)
+    map = {}
+    for sym in data:
+        if sym in map:
+            map[sym] = map.get(sym)+1
+        else:
+            map[sym] = 1
+    
+    product = 0.0
+    for key in map:
+        prob = float(map[key])/total_count
+        product += pow(prob,2)
+    return (1-product)
 
-def getVariance(bins, index):
+
+def getVariance(bins, index,type):
     total_count = 0
     product = 0
     for _, bin in enumerate(bins):
         bin_count = len(bin['subSet'])
         total_count += bin_count
-        bin_v = binVarianceNUM(bin['subSet'], index)
+        if type == 'NUM':
+            bin_v = binVarianceNUM(bin['subSet'], index)
+        else:
+            bin_v = binVarianceSYM(bin['subSet'], index)
         product += bin_count*bin_v
     return product/total_count
 
@@ -304,6 +323,7 @@ def findColumnToSplit(data,splitColumns,tooFew):
     sortedData = []
     # print '^',len(data)
     while index < len(headers):
+        # if(len(data)>tooFew and headers[index]['goal']==False and headers[index]['ignore']==False and index not in splitColumns):
         if(len(data)>tooFew and headers[index]['goal']==False and headers[index]['typeof']=='NUM' and headers[index]['ignore']==False and index not in splitColumns):
             ud = unsupervisedDiscretization(data, headers, index, float(sys.argv[2]), int(sys.argv[3]))
             sortedData = ud["sortedData"]
@@ -312,8 +332,9 @@ def findColumnToSplit(data,splitColumns,tooFew):
             # print '*',headers[index]["name"],len(supervisedBins)
             # for _,r in enumerate(supervisedBins):
             #         print len(r.get('subSet'))
-            colVariance = getVariance(supervisedBins, index)
-            print '>>variance for ',index,' is ',colVariance
+            # print'SUPERVISED BINS FOR  INDEX: ',index, '  DATA: ',supervisedBins
+            colVariance = getVariance(supervisedBins, index, headers[index]['typeof'])
+            # print '>>variance for ',index,' is ',colVariance
             if(colVariance<minColVariance):
                 minColVariance = colVariance
                 minIndex=index
