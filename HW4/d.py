@@ -270,9 +270,26 @@ def unsupervisedDiscretization(data, headers, i, cohen, useDom):
 
     return {"bins": bins, "sortedData": data}
 
+def binVarianceNUM(bin, index):
+    data = [float(row[index]) for row in bin]
+    # print '>>>DATA: ', data
+    return np.var(data)
+    
+
+def getVariance(bins, index):
+    total_count = 0
+    product = 0
+    for _, bin in enumerate(bins):
+        bin_count = len(bin['subSet'])
+        total_count += bin_count
+        bin_v = binVarianceNUM(bin['subSet'], index)
+        product += bin_count*bin_v
+    return product/total_count
+
+
 def findColumnToSplit(data,splitColumns,tooFew):
     index = 0
-    minNumBins = float('inf')
+    minColVariance = float('inf')
     minIndex = 0
     superBins = []
     sortedData = []
@@ -286,8 +303,10 @@ def findColumnToSplit(data,splitColumns,tooFew):
             # print '*',headers[index]["name"],len(supervisedBins)
             # for _,r in enumerate(supervisedBins):
             #         print len(r.get('subSet'))
-            if(len(supervisedBins)<minNumBins):
-                minNumBins=len(supervisedBins)
+            colVariance = getVariance(supervisedBins, index)
+            print '>>variance for ',index,' is ',colVariance
+            if(colVariance<minColVariance):
+                minColVariance = colVariance
                 minIndex=index
                 del superBins[:]
                 for bindid,r in enumerate(supervisedBins):
@@ -323,12 +342,12 @@ def createRegressionTree(data, headers, treelevel, splitColumns, lastSupScore = 
     ###############################################################
     # Comment this section for ignoring my changes    
     ###############################################################
-    sortedData = sortData(sortedData, -1)
-    if len(sortedData) > 0: domScore = sortedData[-1][-1]
-    if domScore < lastSupScore:
-        linec, mu, stddev = datastats(data)
-        print "n=%d mu=%-.2f sd=%-.2f"%(linec, mu, stddev)
-        return
+    # sortedData = sortData(sortedData, -1)
+    # if len(sortedData) > 0: domScore = sortedData[-1][-1]
+    # if domScore < lastSupScore:
+    #     linec, mu, stddev = datastats(data)
+    #     print "n=%d mu=%-.2f sd=%-.2f"%(linec, mu, stddev)
+    #     return
     ###############################################################
     if not superBins:
         linec, mu, stddev = datastats(data)
