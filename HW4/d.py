@@ -2,6 +2,7 @@ import re
 import time
 import sys
 import math
+from collections import Counter
 import numpy as np
 
 # Helper functions:====================
@@ -227,46 +228,54 @@ def combineBins(bins):
     return supeviseddRanges
 
 def unsupervisedDiscretization(data, headers, i, cohen, useDom):
-    data = sortData(data, i)
     lineNumber = len(data)
-    binSize = int(math.floor(math.sqrt(lineNumber)))
     bins = []
-    #small_value = 0.2
-    small_value = cohen    
 
-    epsilon = small_value* headers[i]["sd"]
-    # print 'bin size (i.e. sqrt(n)):', binSize
-    # print 'epsilon:', epsilon
+    if (headers[i]['typeof'] == 'NUM'):
+        data = sortData(data, i)        
+        binSize = int(math.floor(math.sqrt(lineNumber)))
+        #small_value = 0.2
+        small_value = cohen    
 
-    counter = 0
-    dom_index = len(data[counter]) - 1
-    if useDom != 1:
-        dom_index-=1
-    while counter < lineNumber:
-        n = 1
-        bin = {"lo": float(data[counter][i]), "hi": float(data[counter][i])}
-        #Getting list of dependent variable/domination value for each row in a bin
-        tmp_list = [float(data[counter][dom_index])]
-        sub_set = [data[counter]]
-        while (counter+1 < lineNumber) and \
-                (((bin["hi"] - bin["lo"]) < epsilon) or \
-                (n < binSize)):
-            bin["hi"] = float(data[counter + 1][i])
+        epsilon = small_value* headers[i]["sd"]
+        # print 'bin size (i.e. sqrt(n)):', binSize
+        # print 'epsilon:', epsilon
+
+        counter = 0
+        dom_index = len(data[counter]) - 1
+        if useDom != 1:
+            dom_index-=1
+        while counter < lineNumber:
+            n = 1
+            bin = {"lo": float(data[counter][i]), "hi": float(data[counter][i])}
             #Getting list of dependent variable/domination value for each row in a bin
-            tmp_list.append(float(data[counter + 1][dom_index]))
-            sub_set.append(data[counter+1])
-            n += 1
+            tmp_list = [float(data[counter][dom_index])]
+            sub_set = [data[counter]]
+            while (counter+1 < lineNumber) and \
+                    (((bin["hi"] - bin["lo"]) < epsilon) or \
+                    (n < binSize)):
+                bin["hi"] = float(data[counter + 1][i])
+                #Getting list of dependent variable/domination value for each row in a bin
+                tmp_list.append(float(data[counter + 1][dom_index]))
+                sub_set.append(data[counter+1])
+                n += 1
+                counter += 1
+            #Each bin now contains the median value of domination index
+            bins += [{"lo": bin["lo"], "hi": bin["hi"], "span": bin["hi"]-bin["lo"], "n": n, "median":np.median(tmp_list),"values":tmp_list, "subSet":sub_set}]
             counter += 1
-        #Each bin now contains the median value of domination index
-        bins += [{"lo": bin["lo"], "hi": bin["hi"], "span": bin["hi"]-bin["lo"], "n": n, "median":np.median(tmp_list),"values":tmp_list, "subSet":sub_set}]
-        counter += 1
 
-    
-    # checking last bin
-    if len(bins) > 1 and bins[-1]["hi"] - bins[-1]["lo"] < epsilon:
-        bins[-2]["hi"] = bins[-1]["hi"]
-        bins[-2]["n"] += bins[-1]["n"]
-        del bins[-1]
+        
+        # checking last bin
+        if len(bins) > 1 and bins[-1]["hi"] - bins[-1]["lo"] < epsilon:
+            bins[-2]["hi"] = bins[-1]["hi"]
+            bins[-2]["n"] += bins[-1]["n"]
+            del bins[-1]
+
+    else:
+        selectedCol = [row[i] for row in data]
+        C = Counter(selectedCol)
+        bins = [[k,]*v for k,v in C.items()]
+        print bins
 
     return {"bins": bins, "sortedData": data}
 
