@@ -322,6 +322,7 @@ def findColumnToSplit(data,splitColumns,tooFew):
     superBins = []
     sortedData = []
     domIndex = len(headers)
+    supervisedBins = {}
     # print '^',len(data)
     while index < len(headers):
         # if(len(data)>tooFew and headers[index]['goal']==False and headers[index]['ignore']==False and index not in splitColumns):
@@ -329,23 +330,23 @@ def findColumnToSplit(data,splitColumns,tooFew):
             ud = unsupervisedDiscretization(data, headers, index, float(sys.argv[2]), int(sys.argv[3]))
             sortedData = ud["sortedData"]
             bins = ud["bins"]
-            supervisedBins = combineBins(bins)
+            supervisedBins[index] = combineBins(bins)
             # print '*',headers[index]["name"],len(supervisedBins)
             # for _,r in enumerate(supervisedBins):
             #         print len(r.get('subSet'))
             # print'SUPERVISED BINS FOR  INDEX: ',index, '  DATA: ',supervisedBins
-            colVariance = getVariance(supervisedBins, index, headers[index]['typeof'],domIndex)
-            # print '>>variance for ',index,' is ',colVariance
+            colVariance = getVariance(supervisedBins[index], index, headers[index]['typeof'],domIndex)
             if(colVariance<minColVariance):
                 minColVariance = colVariance
                 minIndex=index
-                del superBins[:]
-                for bindid,r in enumerate(supervisedBins):
+        index += 1
+    minVarianceBins = supervisedBins.get(minIndex,[])
+    for bindid,r in enumerate(minVarianceBins):
                     if(len(r.get('subSet'))>tooFew):
                         temp = r.get("subSet")
                         temp.append(bindid+1)
                         superBins.append(temp)
-        index += 1
+
     return minIndex,superBins,sortedData
 
 def datastats(data):
