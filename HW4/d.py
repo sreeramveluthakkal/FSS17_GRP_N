@@ -301,16 +301,16 @@ def binVarianceSYM(bin, index):
     return (1-product)
 
 
-def getVariance(bins, index,type):
+def getVariance(bins, index,type,domIndex):
     total_count = 0
     product = 0
     for _, bin in enumerate(bins):
         bin_count = len(bin['subSet'])
         total_count += bin_count
         if type == 'NUM':
-            bin_v = binVarianceNUM(bin['subSet'], index)
+            bin_v = binVarianceNUM(bin['subSet'], domIndex)
         else:
-            bin_v = binVarianceSYM(bin['subSet'], index)
+            bin_v = binVarianceSYM(bin['subSet'], domIndex)
         product += bin_count*bin_v
     return product/total_count
 
@@ -321,6 +321,7 @@ def findColumnToSplit(data,splitColumns,tooFew):
     minIndex = 0
     superBins = []
     sortedData = []
+    domIndex = len(headers)
     # print '^',len(data)
     while index < len(headers):
         # if(len(data)>tooFew and headers[index]['goal']==False and headers[index]['ignore']==False and index not in splitColumns):
@@ -333,7 +334,7 @@ def findColumnToSplit(data,splitColumns,tooFew):
             # for _,r in enumerate(supervisedBins):
             #         print len(r.get('subSet'))
             # print'SUPERVISED BINS FOR  INDEX: ',index, '  DATA: ',supervisedBins
-            colVariance = getVariance(supervisedBins, index, headers[index]['typeof'])
+            colVariance = getVariance(supervisedBins, index, headers[index]['typeof'],domIndex)
             # print '>>variance for ',index,' is ',colVariance
             if(colVariance<minColVariance):
                 minColVariance = colVariance
