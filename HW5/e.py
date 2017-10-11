@@ -358,14 +358,14 @@ def datastats(data):
     stddev = float(np.std(ranks,ddof=1))
     return lineCount, mu, stddev
 
-def createRegressionTree(data, headers, treelevel, splitColumns, lastSupScore = 0):
+def createRegressionTree(data, headers, treelevel, splitColumns, nodeName,lastSupScore = 0):
     index = 0
     superBins = []
     tooFew = int(sys.argv[4])
     maxDepth = int(sys.argv[5])
     if (len(data)<tooFew):
         linec, mu, stddev = datastats(data)
-        print "n=%d mu=%-.2f sd=%-.2f"%(linec, mu, stddev)
+        print "n=%d mu=%-.2f sd=%-.2f name= "%(linec, mu, stddev)
         return
     #find initial split for the tree
     index, superBins, sortedData = findColumnToSplit(data,splitColumns,tooFew)
@@ -383,7 +383,8 @@ def createRegressionTree(data, headers, treelevel, splitColumns, lastSupScore = 
     ###############################################################
     if not superBins:
         linec, mu, stddev = datastats(data)
-        print "n=%d mu=%-.2f sd=%-.2f"%(linec, mu, stddev)
+        # nodeName += headers[index]["name"]
+        print "n=%d mu=%-.2f sd=%-.2f name= "%(linec, mu, stddev)
         return
     print '\n',
     if (treelevel>0):
@@ -395,13 +396,17 @@ def createRegressionTree(data, headers, treelevel, splitColumns, lastSupScore = 
     temp = splitColumns[:]
     for i,currBin in enumerate(superBins):
         splitColumns = temp[:]
-        print '|'*(treelevel-1)+headers[index]["name"]+'='+str(currBin[-1])+'\t\t:\t\t',
+        linec, mu, stddev = datastats(currBin[:len(currBin)-1])
+        print '|'*(treelevel-1)+headers[index]["name"]+'='+str(currBin[-1])+'\t\t','MEAN: ',mu,':\t\t',
         # leafstats = 
-        createRegressionTree(currBin[:len(currBin)-1], headers, treelevel, splitColumns, domScore)
+        nodeName += [headers[index]["name"]]
+        createRegressionTree(currBin[:len(currBin)-1], headers, treelevel, splitColumns,nodeName, domScore)
+        nodeName = nodeName[:-1]
         # if not leafstats:
         #     print leafstats
         # for p in splitColumns: print '##',p
-        
+    nodeName = []
+    
 
 ## Running the script
 if len(sys.argv) < 6:
@@ -421,7 +426,7 @@ else:
     linecount, mu, stddev = datastats(data)
     print "in=%d mu=%-.2f sd=%-.2f"%(lineCount, mu, stddev),
     # print "in=%s mu=%-.2f sd=%-.2f"%(lineCount, (lineCount-1)/2, math.sqrt(((lineCount**2)-1)/12)) #TODO check stddev
-    createRegressionTree(data, headers, 0, [])
+    createRegressionTree(data, headers, 0,[],[])
 
     print '\n\n\n############# SOME STATS #############'
     print 'Number of lines of valid data:', lineCount
