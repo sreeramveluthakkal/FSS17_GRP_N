@@ -279,32 +279,74 @@ def unsupervisedDiscretization(data, headers, i, cohen, useDom):
 
     return {"bins": bins, "sortedData": data}
 
+def binVarianceNUM(bin, index):
+    data = [float(row[index]) for row in bin]
+    # print ' index: ',index,'>>>DATA: ', data, 'var: ',np.var(data)
+    return np.var(data)
+    
+def binVarianceSYM(bin, index):
+    data = [row[index] for row in bin]
+    total_count = len(data)
+    map = {}
+    for sym in data:
+        if sym in map:
+            map[sym] = map.get(sym)+1
+        else:
+            map[sym] = 1
+    
+    product = 0.0
+    for key in map:
+        prob = float(map[key])/total_count
+        product += pow(prob,2)
+    return (1-product)
+
+
+def getVariance(bins, index,type,domIndex):
+    total_count = 0
+    product = 0
+    for _, bin in enumerate(bins):
+        bin_count = len(bin['subSet'])
+        total_count += bin_count
+        if type == 'NUM':
+            bin_v = binVarianceNUM(bin['subSet'], domIndex)
+        else:
+            bin_v = binVarianceSYM(bin['subSet'], domIndex)
+        product += bin_count*bin_v
+    return product/total_count
+
+
 def findColumnToSplit(data,splitColumns,tooFew):
     index = 0
-    minNumBins = float('inf')
+    minColVariance = float('inf')
     minIndex = 0
     superBins = []
     sortedData = []
+    domIndex = len(headers)
+    supervisedBins = {}
     # print '^',len(data)
     while index < len(headers):
+        # if(len(data)>tooFew and headers[index]['goal']==False and headers[index]['ignore']==False and index not in splitColumns):
         if(len(data)>tooFew and headers[index]['goal']==False and headers[index]['typeof']=='NUM' and headers[index]['ignore']==False and index not in splitColumns):
             ud = unsupervisedDiscretization(data, headers, index, float(sys.argv[2]), int(sys.argv[3]))
             sortedData = ud["sortedData"]
             bins = ud["bins"]
-            supervisedBins = combineBins(bins)
+            supervisedBins[index] = combineBins(bins)
             # print '*',headers[index]["name"],len(supervisedBins)
             # for _,r in enumerate(supervisedBins):
             #         print len(r.get('subSet'))
-            if(len(supervisedBins)<minNumBins):
-                minNumBins=len(supervisedBins)
+            # print'SUPERVISED BINS FOR  INDEX: ',index, '  DATA: ',supervisedBins
+            colVariance = getVariance(supervisedBins[index], index, headers[index]['typeof'],domIndex)
+            if(colVariance<minColVariance):
+                minColVariance = colVariance
                 minIndex=index
-                del superBins[:]
-                for bindid,r in enumerate(supervisedBins):
+        index += 1
+    minVarianceBins = supervisedBins.get(minIndex,[])
+    for bindid,r in enumerate(minVarianceBins):
                     if(len(r.get('subSet'))>tooFew):
                         temp = r.get("subSet")
                         temp.append(bindid+1)
                         superBins.append(temp)
-        index += 1
+
     return minIndex,superBins,sortedData
 
 def datastats(data):
@@ -332,12 +374,12 @@ def createRegressionTree(data, headers, treelevel, splitColumns, lastSupScore = 
     ###############################################################
     # Comment this section for ignoring my changes    
     ###############################################################
-    sortedData = sortData(sortedData, -1)
-    if len(sortedData) > 0: domScore = sortedData[-1][-1]
-    if domScore < lastSupScore:
-        linec, mu, stddev = datastats(data)
-        print "n=%d mu=%-.2f sd=%-.2f"%(linec, mu, stddev)
-        return
+    # sortedData = sortData(sortedData, -1)
+    # if len(sortedData) > 0: domScore = sortedData[-1][-1]
+    # if domScore < lastSupScore:
+    #     linec, mu, stddev = datastats(data)
+    #     print "n=%d mu=%-.2f sd=%-.2f"%(linec, mu, stddev)
+    #     return
     ###############################################################
     if not superBins:
         linec, mu, stddev = datastats(data)
