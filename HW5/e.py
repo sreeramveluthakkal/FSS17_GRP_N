@@ -365,7 +365,7 @@ def createRegressionTree(data, headers, treelevel, splitColumns, nodeName,lastSu
     maxDepth = int(sys.argv[5])
     if (len(data)<tooFew):
         linec, mu, stddev = datastats(data)
-        print "n=%d mu=%-.2f sd=%-.2f name= "%(linec, mu, stddev)
+        print "n=%d mu=%-.2f sd=%-.2f name=%s"%(linec, mu, stddev, '.'.join(nodeName))
         return
     #find initial split for the tree
     index, superBins, sortedData = findColumnToSplit(data,splitColumns,tooFew)
@@ -383,8 +383,7 @@ def createRegressionTree(data, headers, treelevel, splitColumns, nodeName,lastSu
     ###############################################################
     if not superBins:
         linec, mu, stddev = datastats(data)
-        # nodeName += headers[index]["name"]
-        print "n=%d mu=%-.2f sd=%-.2f name= "%(linec, mu, stddev)
+        print "n=%d mu=%-.2f sd=%-.2f name=%s"%(linec, mu, stddev, '.'.join(nodeName))  
         return
     print '\n',
     if (treelevel>0):
@@ -397,15 +396,15 @@ def createRegressionTree(data, headers, treelevel, splitColumns, nodeName,lastSu
     for i,currBin in enumerate(superBins):
         splitColumns = temp[:]
         linec, mu, stddev = datastats(currBin[:len(currBin)-1])
-        print '|'*(treelevel-1)+headers[index]["name"]+'='+str(currBin[-1])+'\t\t','MEAN: ',mu,':\t\t',
+        # print '|'*(treelevel-1)+headers[index]["name"]+'='+str(currBin[-1])+'\t','MEAN: ',mu,'\t',
+        print '|'*(treelevel-1)+headers[index]["name"]+'='+str(currBin[-1])+'\t\t:\t\t',
         # leafstats = 
         nodeName += [headers[index]["name"]]
         createRegressionTree(currBin[:len(currBin)-1], headers, treelevel, splitColumns,nodeName, domScore)
-        nodeName = nodeName[:-1]
+        nodeName = nodeName[:-(len(superBins)-1)]
         # if not leafstats:
         #     print leafstats
         # for p in splitColumns: print '##',p
-    nodeName = []
     
 
 ## Running the script
