@@ -34,154 +34,152 @@ __DESCRIPTION__: This is the test case given in the question.
 - max depth is 3 levels including root node.  
 __OUTPUT__:  
 INPUT: python d.py auto.csv 0.2 1 10 3  
-err: unexpected data found in line: 179
-err: unexpected data found in line: 208
-err: unexpected data found in line: 211
-err: unexpected data found in line: 234
-err: unexpected data found in line: 362
-err: unexpected data found in line: 392
+err: unexpected data found in line: 179  
+err: unexpected data found in line: 208  
+err: unexpected data found in line: 211  
+err: unexpected data found in line: 234  
+err: unexpected data found in line: 362  
+err: unexpected data found in line: 392  
 
 
 
-############# REGRESSION TREE #############
-in=392 mu=196.50 sd=113.30
+############# REGRESSION TREE #############   
+in=392 mu=196.50 sd=113.30  
 horsepower:1            :
-|displacement:2         :               n=29 mu=353.86 sd=27.23 name=horsepower:1.displacement:2
-|displacement:1         :               n=21 mu=363.00 sd=24.95 name=horsepower:1.displacement:1
-horsepower:2            :
-|displacement:2         :
-||model:2               :               n=13 mu=301.46 sd=29.09 name=horsepower:2.displacement:2.model:2
-||model:3               :               n=12 mu=291.17 sd=34.62 name=horsepower:2.displacement:2.model:3
-|displacement:1         :               n=18 mu=319.67 sd=42.94 name=horsepower:2.displacement:1
-|displacement:3         :               n=14 mu=270.00 sd=42.05 name=displacement:3
-horsepower:3            :
-|displacement:2         :
-||model:1               :               n=12 mu=226.42 sd=41.97 name=horsepower:3.displacement:2.model:1
-horsepower:4            :
-|displacement:2         :               n=12 mu=209.25 sd=38.66 name=horsepower:4.displacement:2
-|displacement:4         :               n=11 mu=168.27 sd=28.86 name=horsepower:4.displacement:4
-horsepower:5            :
-|displacement:4         :               n=24 mu=142.29 sd=21.71 name=horsepower:5.displacement:4
-|displacement:5         :               n=16 mu=124.56 sd=30.48 name=horsepower:5.displacement:5
-horsepower:6            :
-|displacement:3         :               n=18 mu=79.39 sd=17.58 name=horsepower:6.displacement:3
-horsepower:7            :
-|displacement:3         :               n=18 mu=40.89 sd=20.46 name=horsepower:7.displacement:3
-|displacement:2         :               n=13 mu=56.46 sd=22.16 name=horsepower:7.displacement:2
-horsepower:8            :               n=19 mu=24.68 sd=20.32 name=horsepower:8
+|displacement:2         :               n=29 mu=353.86 sd=27.23 name=horsepower:1.displacement:2  
+|displacement:1         :               n=21 mu=363.00 sd=24.95 name=horsepower:1.displacement:1  
+horsepower:2            :  
+|displacement:2         :  
+||model:2               :               n=13 mu=301.46 sd=29.09 name=horsepower:2.displacement:2.model:2  
+||model:3               :               n=12 mu=291.17 sd=34.62 name=horsepower:2.displacement:2.model:3  
+|displacement:1         :               n=18 mu=319.67 sd=42.94 name=horsepower:2.displacement:1  
+|displacement:3         :               n=14 mu=270.00 sd=42.05 name=displacement:3  
+horsepower:3            :  
+|displacement:2         :  
+||model:1               :               n=12 mu=226.42 sd=41.97 name=horsepower:3.displacement:2.model:1  
+horsepower:4            :  
+|displacement:2         :               n=12 mu=209.25 sd=38.66 name=horsepower:4.displacement:2  
+|displacement:4         :               n=11 mu=168.27 sd=28.86 name=horsepower:4.displacement:4  
+horsepower:5            :  
+|displacement:4         :               n=24 mu=142.29 sd=21.71 name=horsepower:5.displacement:4  
+|displacement:5         :               n=16 mu=124.56 sd=30.48 name=horsepower:5.displacement:5  
+horsepower:6            :  
+|displacement:3         :               n=18 mu=79.39 sd=17.58 name=horsepower:6.displacement:3  
+horsepower:7            :  
+|displacement:3         :               n=18 mu=40.89 sd=20.46 name=horsepower:7.displacement:3  
+|displacement:2         :               n=13 mu=56.46 sd=22.16 name=horsepower:7.displacement:2  
+horsepower:8            :               n=19 mu=24.68 sd=20.32 name=horsepower:8  
 
 
 
 
-CONTRAST SETS:
+CONTRAST SETS:  
 
-horsepower:1.displacement:2  is a monitor for  horsepower:1.displacement:1             {DELTA:  -9.13793103448 }
-horsepower:1.displacement:2  is a plan for  horsepower:2.displacement:2.model:2             {DELTA:  52.400530504 }
-horsepower:1.displacement:2  is a plan for  horsepower:2.displacement:2.model:3             {DELTA:  62.6954022989 }
-horsepower:1.displacement:2  is a plan for  horsepower:2.displacement:1             {DELTA:  34.1954022989 }
-horsepower:1.displacement:2  is a plan for  displacement:3             {DELTA:  83.8620689655 }
-horsepower:1.displacement:2  is a plan for  horsepower:3.displacement:2.model:1             {DELTA:  127.445402299 }
-horsepower:1.displacement:2  is a plan for  horsepower:4.displacement:2             {DELTA:  144.612068966 }
-horsepower:1.displacement:2  is a plan for  horsepower:4.displacement:4             {DELTA:  185.589341693 }
-horsepower:1.displacement:2  is a plan for  horsepower:5.displacement:4             {DELTA:  211.570402299 }
-horsepower:1.displacement:2  is a plan for  horsepower:5.displacement:5             {DELTA:  229.299568966 }
-horsepower:1.displacement:2  is a plan for  horsepower:6.displacement:3             {DELTA:  274.473180077 }
-horsepower:1.displacement:2  is a plan for  horsepower:7.displacement:3             {DELTA:  312.973180077 }
-horsepower:1.displacement:2  is a plan for  horsepower:7.displacement:2             {DELTA:  297.400530504 }
-horsepower:1.displacement:2  is a plan for  horsepower:8             {DELTA:  329.177858439 }
-horsepower:1.displacement:1  is a plan for  horsepower:2.displacement:2.model:2             {DELTA:  61.5384615385 }
-horsepower:1.displacement:1  is a plan for  horsepower:2.displacement:2.model:3             {DELTA:  71.8333333333 }
-horsepower:1.displacement:1  is a plan for  horsepower:2.displacement:1             {DELTA:  43.3333333333 }
-horsepower:1.displacement:1  is a plan for  displacement:3             {DELTA:  93.0 }
-horsepower:1.displacement:1  is a plan for  horsepower:3.displacement:2.model:1             {DELTA:  136.583333333 }
-horsepower:1.displacement:1  is a plan for  horsepower:4.displacement:2             {DELTA:  153.75 }
-horsepower:1.displacement:1  is a plan for  horsepower:4.displacement:4             {DELTA:  194.727272727 }
-horsepower:1.displacement:1  is a plan for  horsepower:5.displacement:4             {DELTA:  220.708333333 }
-horsepower:1.displacement:1  is a plan for  horsepower:5.displacement:5             {DELTA:  238.4375 }
-horsepower:1.displacement:1  is a plan for  horsepower:6.displacement:3             {DELTA:  283.611111111 }
-horsepower:1.displacement:1  is a plan for  horsepower:7.displacement:3             {DELTA:  322.111111111 }
-horsepower:1.displacement:1  is a plan for  horsepower:7.displacement:2             {DELTA:  306.538461538 }
-horsepower:1.displacement:1  is a plan for  horsepower:8             {DELTA:  338.315789474 }
-horsepower:2.displacement:2.model:2  is a plan for  horsepower:2.displacement:2.model:3             {DELTA:  10.2948717949 }
-horsepower:2.displacement:2.model:2  is a monitor for  horsepower:2.displacement:1             {DELTA:  -18.2051282051 }
-horsepower:2.displacement:2.model:2  is a plan for  displacement:3             {DELTA:  31.4615384615 }
-horsepower:2.displacement:2.model:2  is a plan for  horsepower:3.displacement:2.model:1             {DELTA:  75.0448717949 }
-horsepower:2.displacement:2.model:2  is a plan for  horsepower:4.displacement:2             {DELTA:  92.2115384615 }
-horsepower:2.displacement:2.model:2  is a plan for  horsepower:4.displacement:4             {DELTA:  133.188811189 }
-horsepower:2.displacement:2.model:2  is a plan for  horsepower:5.displacement:4             {DELTA:  159.169871795 }
-horsepower:2.displacement:2.model:2  is a plan for  horsepower:5.displacement:5             {DELTA:  176.899038462 }
-horsepower:2.displacement:2.model:2  is a plan for  horsepower:6.displacement:3             {DELTA:  222.072649573 }
-horsepower:2.displacement:2.model:2  is a plan for  horsepower:7.displacement:3             {DELTA:  260.572649573 }
-horsepower:2.displacement:2.model:2  is a plan for  horsepower:7.displacement:2             {DELTA:  245.0 }
-horsepower:2.displacement:2.model:2  is a plan for  horsepower:8             {DELTA:  276.777327935 }
-horsepower:2.displacement:2.model:3  is a monitor for  horsepower:2.displacement:1             {DELTA:  -28.5 }
-horsepower:2.displacement:2.model:3  is a plan for  displacement:3             {DELTA:  21.1666666667 }
-horsepower:2.displacement:2.model:3  is a plan for  horsepower:3.displacement:2.model:1             {DELTA:  64.75 }
-horsepower:2.displacement:2.model:3  is a plan for  horsepower:4.displacement:2             {DELTA:  81.9166666667 }
-horsepower:2.displacement:2.model:3  is a plan for  horsepower:4.displacement:4             {DELTA:  122.893939394 }
-horsepower:2.displacement:2.model:3  is a plan for  horsepower:5.displacement:4             {DELTA:  148.875 }
-horsepower:2.displacement:2.model:3  is a plan for  horsepower:5.displacement:5             {DELTA:  166.604166667 }
-horsepower:2.displacement:2.model:3  is a plan for  horsepower:6.displacement:3             {DELTA:  211.777777778 }
-horsepower:2.displacement:2.model:3  is a plan for  horsepower:7.displacement:3             {DELTA:  250.277777778 }
-horsepower:2.displacement:2.model:3  is a plan for  horsepower:7.displacement:2             {DELTA:  234.705128205 }
-horsepower:2.displacement:2.model:3  is a plan for  horsepower:8             {DELTA:  266.48245614 }
-horsepower:2.displacement:1  is a plan for  displacement:3             {DELTA:  49.6666666667 }
-horsepower:2.displacement:1  is a plan for  horsepower:3.displacement:2.model:1             {DELTA:  93.25 }
-horsepower:2.displacement:1  is a plan for  horsepower:4.displacement:2             {DELTA:  110.416666667 }
-horsepower:2.displacement:1  is a plan for  horsepower:4.displacement:4             {DELTA:  151.393939394 }
-horsepower:2.displacement:1  is a plan for  horsepower:5.displacement:4             {DELTA:  177.375 }
-horsepower:2.displacement:1  is a plan for  horsepower:5.displacement:5             {DELTA:  195.104166667 }
-horsepower:2.displacement:1  is a plan for  horsepower:6.displacement:3             {DELTA:  240.277777778 }
-horsepower:2.displacement:1  is a plan for  horsepower:7.displacement:3             {DELTA:  278.777777778 }
-horsepower:2.displacement:1  is a plan for  horsepower:7.displacement:2             {DELTA:  263.205128205 }
-horsepower:2.displacement:1  is a plan for  horsepower:8             {DELTA:  294.98245614 }
-displacement:3  is a plan for  horsepower:3.displacement:2.model:1             {DELTA:  43.5833333333 }
-displacement:3  is a plan for  horsepower:4.displacement:2             {DELTA:  60.75 }
-displacement:3  is a plan for  horsepower:4.displacement:4             {DELTA:  101.727272727 }
-displacement:3  is a plan for  horsepower:5.displacement:4             {DELTA:  127.708333333 }
-displacement:3  is a plan for  horsepower:5.displacement:5             {DELTA:  145.4375 }
-displacement:3  is a plan for  horsepower:6.displacement:3             {DELTA:  190.611111111 }
-displacement:3  is a plan for  horsepower:7.displacement:3             {DELTA:  229.111111111 }
-displacement:3  is a plan for  horsepower:7.displacement:2             {DELTA:  213.538461538 }
-displacement:3  is a plan for  horsepower:8             {DELTA:  245.315789474 }
-horsepower:3.displacement:2.model:1  is a plan for  horsepower:4.displacement:2             {DELTA:  17.1666666667 }
-horsepower:3.displacement:2.model:1  is a plan for  horsepower:4.displacement:4             {DELTA:  58.1439393939 }
-horsepower:3.displacement:2.model:1  is a plan for  horsepower:5.displacement:4             {DELTA:  84.125 }
-horsepower:3.displacement:2.model:1  is a plan for  horsepower:5.displacement:5             {DELTA:  101.854166667 }
-horsepower:3.displacement:2.model:1  is a plan for  horsepower:6.displacement:3             {DELTA:  147.027777778 }
-horsepower:3.displacement:2.model:1  is a plan for  horsepower:7.displacement:3             {DELTA:  185.527777778 }
-horsepower:3.displacement:2.model:1  is a plan for  horsepower:7.displacement:2             {DELTA:  169.955128205 }
-horsepower:3.displacement:2.model:1  is a plan for  horsepower:8             {DELTA:  201.73245614 }
-horsepower:4.displacement:2  is a plan for  horsepower:4.displacement:4             {DELTA:  40.9772727273 }
-horsepower:4.displacement:2  is a plan for  horsepower:5.displacement:4             {DELTA:  66.9583333333 }
-horsepower:4.displacement:2  is a plan for  horsepower:5.displacement:5             {DELTA:  84.6875 }
-horsepower:4.displacement:2  is a plan for  horsepower:6.displacement:3             {DELTA:  129.861111111 }
-horsepower:4.displacement:2  is a plan for  horsepower:7.displacement:3             {DELTA:  168.361111111 }
-horsepower:4.displacement:2  is a plan for  horsepower:7.displacement:2             {DELTA:  152.788461538 }
-horsepower:4.displacement:2  is a plan for  horsepower:8             {DELTA:  184.565789474 }
-horsepower:4.displacement:4  is a plan for  horsepower:5.displacement:4             {DELTA:  25.9810606061 }
-horsepower:4.displacement:4  is a plan for  horsepower:5.displacement:5             {DELTA:  43.7102272727 }
-horsepower:4.displacement:4  is a plan for  horsepower:6.displacement:3             {DELTA:  88.8838383838 }
-horsepower:4.displacement:4  is a plan for  horsepower:7.displacement:3             {DELTA:  127.383838384 }
-horsepower:4.displacement:4  is a plan for  horsepower:7.displacement:2             {DELTA:  111.811188811 }
-horsepower:4.displacement:4  is a plan for  horsepower:8             {DELTA:  143.588516746 }
-horsepower:5.displacement:4  is a plan for  horsepower:5.displacement:5             {DELTA:  17.7291666667 }
-horsepower:5.displacement:4  is a plan for  horsepower:6.displacement:3             {DELTA:  62.9027777778 }
-horsepower:5.displacement:4  is a plan for  horsepower:7.displacement:3             {DELTA:  101.402777778 }
-horsepower:5.displacement:4  is a plan for  horsepower:7.displacement:2             {DELTA:  85.8301282051 }
-horsepower:5.displacement:4  is a plan for  horsepower:8             {DELTA:  117.60745614 }
-horsepower:5.displacement:5  is a plan for  horsepower:6.displacement:3             {DELTA:  45.1736111111 }
-horsepower:5.displacement:5  is a plan for  horsepower:7.displacement:3             {DELTA:  83.6736111111 }
-horsepower:5.displacement:5  is a plan for  horsepower:7.displacement:2             {DELTA:  68.1009615385 }
-horsepower:5.displacement:5  is a plan for  horsepower:8             {DELTA:  99.8782894737 }
-horsepower:6.displacement:3  is a plan for  horsepower:7.displacement:3             {DELTA:  38.5 }
-horsepower:6.displacement:3  is a plan for  horsepower:7.displacement:2             {DELTA:  22.9273504274 }
-horsepower:6.displacement:3  is a plan for  horsepower:8             {DELTA:  54.7046783626 }
-horsepower:7.displacement:3  is a monitor for  horsepower:7.displacement:2             {DELTA:  -15.5726495726 }
-horsepower:7.displacement:3  is a plan for  horsepower:8             {DELTA:  16.2046783626 }
-horsepower:7.displacement:2  is a plan for  horsepower:8             {DELTA:  31.7773279352 }
-
-############# SOME STATS #############  
+horsepower:1.displacement:2  is a monitor for  horsepower:1.displacement:1             {DELTA:  -9.13793103448 }  
+horsepower:1.displacement:2  is a plan for  horsepower:2.displacement:2.model:2             {DELTA:  52.400530504 }  
+horsepower:1.displacement:2  is a plan for  horsepower:2.displacement:2.model:3             {DELTA:  62.6954022989 }  
+horsepower:1.displacement:2  is a plan for  horsepower:2.displacement:1             {DELTA:  34.1954022989 }  
+horsepower:1.displacement:2  is a plan for  displacement:3             {DELTA:  83.8620689655 }  
+horsepower:1.displacement:2  is a plan for  horsepower:3.displacement:2.model:1             {DELTA:  127.445402299 }  
+horsepower:1.displacement:2  is a plan for  horsepower:4.displacement:2             {DELTA:  144.612068966 }  
+horsepower:1.displacement:2  is a plan for  horsepower:4.displacement:4             {DELTA:  185.589341693 }  
+horsepower:1.displacement:2  is a plan for  horsepower:5.displacement:4             {DELTA:  211.570402299 }  
+horsepower:1.displacement:2  is a plan for  horsepower:5.displacement:5             {DELTA:  229.299568966 }  
+horsepower:1.displacement:2  is a plan for  horsepower:6.displacement:3             {DELTA:  274.473180077 }  
+horsepower:1.displacement:2  is a plan for  horsepower:7.displacement:3             {DELTA:  312.973180077 }  
+horsepower:1.displacement:2  is a plan for  horsepower:7.displacement:2             {DELTA:  297.400530504 }  
+horsepower:1.displacement:2  is a plan for  horsepower:8             {DELTA:  329.177858439 }  
+horsepower:1.displacement:1  is a plan for  horsepower:2.displacement:2.model:2             {DELTA:  61.5384615385 }  
+horsepower:1.displacement:1  is a plan for  horsepower:2.displacement:2.model:3             {DELTA:  71.8333333333 }  
+horsepower:1.displacement:1  is a plan for  horsepower:2.displacement:1             {DELTA:  43.3333333333 }  
+horsepower:1.displacement:1  is a plan for  displacement:3             {DELTA:  93.0 }  
+horsepower:1.displacement:1  is a plan for  horsepower:3.displacement:2.model:1             {DELTA:  136.583333333 }  
+horsepower:1.displacement:1  is a plan for  horsepower:4.displacement:2             {DELTA:  153.75 }  
+horsepower:1.displacement:1  is a plan for  horsepower:4.displacement:4             {DELTA:  194.727272727 }  
+horsepower:1.displacement:1  is a plan for  horsepower:5.displacement:4             {DELTA:  220.708333333 }  
+horsepower:1.displacement:1  is a plan for  horsepower:5.displacement:5             {DELTA:  238.4375 }  
+horsepower:1.displacement:1  is a plan for  horsepower:6.displacement:3             {DELTA:  283.611111111 }  
+horsepower:1.displacement:1  is a plan for  horsepower:7.displacement:3             {DELTA:  322.111111111 }  
+horsepower:1.displacement:1  is a plan for  horsepower:7.displacement:2             {DELTA:  306.538461538 }  
+horsepower:1.displacement:1  is a plan for  horsepower:8             {DELTA:  338.315789474 }  
+horsepower:2.displacement:2.model:2  is a plan for  horsepower:2.displacement:2.model:3             {DELTA:  10.2948717949 }  
+horsepower:2.displacement:2.model:2  is a monitor for  horsepower:2.displacement:1             {DELTA:  -18.2051282051 }  
+horsepower:2.displacement:2.model:2  is a plan for  displacement:3             {DELTA:  31.4615384615 }  
+horsepower:2.displacement:2.model:2  is a plan for  horsepower:3.displacement:2.model:1             {DELTA:  75.0448717949 }  
+horsepower:2.displacement:2.model:2  is a plan for  horsepower:4.displacement:2             {DELTA:  92.2115384615 }  
+horsepower:2.displacement:2.model:2  is a plan for  horsepower:4.displacement:4             {DELTA:  133.188811189 }  
+horsepower:2.displacement:2.model:2  is a plan for  horsepower:5.displacement:4             {DELTA:  159.169871795 }  
+horsepower:2.displacement:2.model:2  is a plan for  horsepower:5.displacement:5             {DELTA:  176.899038462 }  
+horsepower:2.displacement:2.model:2  is a plan for  horsepower:6.displacement:3             {DELTA:  222.072649573 }  
+horsepower:2.displacement:2.model:2  is a plan for  horsepower:7.displacement:3             {DELTA:  260.572649573 }  
+horsepower:2.displacement:2.model:2  is a plan for  horsepower:7.displacement:2             {DELTA:  245.0 }  
+horsepower:2.displacement:2.model:2  is a plan for  horsepower:8             {DELTA:  276.777327935 }  
+horsepower:2.displacement:2.model:3  is a monitor for  horsepower:2.displacement:1             {DELTA:  -28.5 }  
+horsepower:2.displacement:2.model:3  is a plan for  displacement:3             {DELTA:  21.1666666667 }  
+horsepower:2.displacement:2.model:3  is a plan for  horsepower:3.displacement:2.model:1             {DELTA:  64.75 }  
+horsepower:2.displacement:2.model:3  is a plan for  horsepower:4.displacement:2             {DELTA:  81.9166666667 }  
+horsepower:2.displacement:2.model:3  is a plan for  horsepower:4.displacement:4             {DELTA:  122.893939394 }  
+horsepower:2.displacement:2.model:3  is a plan for  horsepower:5.displacement:4             {DELTA:  148.875 }  
+horsepower:2.displacement:2.model:3  is a plan for  horsepower:5.displacement:5             {DELTA:  166.604166667 }  
+horsepower:2.displacement:2.model:3  is a plan for  horsepower:6.displacement:3             {DELTA:  211.777777778 }  
+horsepower:2.displacement:2.model:3  is a plan for  horsepower:7.displacement:3             {DELTA:  250.277777778 }  
+horsepower:2.displacement:2.model:3  is a plan for  horsepower:7.displacement:2             {DELTA:  234.705128205 }  
+horsepower:2.displacement:2.model:3  is a plan for  horsepower:8             {DELTA:  266.48245614 }  
+horsepower:2.displacement:1  is a plan for  displacement:3             {DELTA:  49.6666666667 }  
+horsepower:2.displacement:1  is a plan for  horsepower:3.displacement:2.model:1             {DELTA:  93.25 }  
+horsepower:2.displacement:1  is a plan for  horsepower:4.displacement:2             {DELTA:  110.416666667 }  
+horsepower:2.displacement:1  is a plan for  horsepower:4.displacement:4             {DELTA:  151.393939394 }  
+horsepower:2.displacement:1  is a plan for  horsepower:5.displacement:4             {DELTA:  177.375 }  
+horsepower:2.displacement:1  is a plan for  horsepower:5.displacement:5             {DELTA:  195.104166667 }  
+horsepower:2.displacement:1  is a plan for  horsepower:6.displacement:3             {DELTA:  240.277777778 }  
+horsepower:2.displacement:1  is a plan for  horsepower:7.displacement:3             {DELTA:  278.777777778 }  
+horsepower:2.displacement:1  is a plan for  horsepower:7.displacement:2             {DELTA:  263.205128205 }  
+horsepower:2.displacement:1  is a plan for  horsepower:8             {DELTA:  294.98245614 }  
+displacement:3  is a plan for  horsepower:3.displacement:2.model:1             {DELTA:  43.5833333333 }  
+displacement:3  is a plan for  horsepower:4.displacement:2             {DELTA:  60.75 }  
+displacement:3  is a plan for  horsepower:4.displacement:4             {DELTA:  101.727272727 }  
+displacement:3  is a plan for  horsepower:5.displacement:4             {DELTA:  127.708333333 }  
+displacement:3  is a plan for  horsepower:5.displacement:5             {DELTA:  145.4375 }  
+displacement:3  is a plan for  horsepower:6.displacement:3             {DELTA:  190.611111111 }  
+displacement:3  is a plan for  horsepower:7.displacement:3             {DELTA:  229.111111111 }  
+displacement:3  is a plan for  horsepower:7.displacement:2             {DELTA:  213.538461538 }  
+displacement:3  is a plan for  horsepower:8             {DELTA:  245.315789474 }  
+horsepower:3.displacement:2.model:1  is a plan for  horsepower:4.displacement:2             {DELTA:  17.1666666667 }  
+horsepower:3.displacement:2.model:1  is a plan for  horsepower:4.displacement:4             {DELTA:  58.1439393939 }  
+horsepower:3.displacement:2.model:1  is a plan for  horsepower:5.displacement:4             {DELTA:  84.125 }  
+horsepower:3.displacement:2.model:1  is a plan for  horsepower:5.displacement:5             {DELTA:  101.854166667 }  
+horsepower:3.displacement:2.model:1  is a plan for  horsepower:6.displacement:3             {DELTA:  147.027777778 }  
+horsepower:3.displacement:2.model:1  is a plan for  horsepower:7.displacement:3             {DELTA:  185.527777778 }  
+horsepower:3.displacement:2.model:1  is a plan for  horsepower:7.displacement:2             {DELTA:  169.955128205 }  
+horsepower:3.displacement:2.model:1  is a plan for  horsepower:8             {DELTA:  201.73245614 }  
+horsepower:4.displacement:2  is a plan for  horsepower:4.displacement:4             {DELTA:  40.9772727273 }  
+horsepower:4.displacement:2  is a plan for  horsepower:5.displacement:4             {DELTA:  66.9583333333 }  
+horsepower:4.displacement:2  is a plan for  horsepower:5.displacement:5             {DELTA:  84.6875 }  
+horsepower:4.displacement:2  is a plan for  horsepower:6.displacement:3             {DELTA:  129.861111111 }  
+horsepower:4.displacement:2  is a plan for  horsepower:7.displacement:3             {DELTA:  168.361111111 }  
+horsepower:4.displacement:2  is a plan for  horsepower:7.displacement:2             {DELTA:  152.788461538 }  
+horsepower:4.displacement:2  is a plan for  horsepower:8             {DELTA:  184.565789474 }  
+horsepower:4.displacement:4  is a plan for  horsepower:5.displacement:4             {DELTA:  25.9810606061 }  
+horsepower:4.displacement:4  is a plan for  horsepower:5.displacement:5             {DELTA:  43.7102272727 }  
+horsepower:4.displacement:4  is a plan for  horsepower:6.displacement:3             {DELTA:  88.8838383838 }  
+horsepower:4.displacement:4  is a plan for  horsepower:7.displacement:3             {DELTA:  127.383838384 }  
+horsepower:4.displacement:4  is a plan for  horsepower:7.displacement:2             {DELTA:  111.811188811 }  
+horsepower:4.displacement:4  is a plan for  horsepower:8             {DELTA:  143.588516746 }  
+horsepower:5.displacement:4  is a plan for  horsepower:5.displacement:5             {DELTA:  17.7291666667 }  
+horsepower:5.displacement:4  is a plan for  horsepower:6.displacement:3             {DELTA:  62.9027777778 }  
+horsepower:5.displacement:4  is a plan for  horsepower:7.displacement:3             {DELTA:  101.402777778 }  
+horsepower:5.displacement:4  is a plan for  horsepower:7.displacement:2             {DELTA:  85.8301282051 }  
+horsepower:5.displacement:4  is a plan for  horsepower:8             {DELTA:  117.60745614 }  
+horsepower:5.displacement:5  is a plan for  horsepower:6.displacement:3             {DELTA:  45.1736111111 }  
+horsepower:5.displacement:5  is a plan for  horsepower:7.displacement:3             {DELTA:  83.6736111111 }  
+horsepower:5.displacement:5  is a plan for  horsepower:7.displacement:2             {DELTA:  68.1009615385 }  
+horsepower:5.displacement:5  is a plan for  horsepower:8             {DELTA:  99.8782894737 }  
+horsepower:6.displacement:3  is a plan for  horsepower:7.displacement:3             {DELTA:  38.5 }  
+horsepower:6.displacement:3  is a plan for  horsepower:7.displacement:2             {DELTA:  22.9273504274 }  
+horsepower:6.displacement:3  is a plan for  horsepower:8             {DELTA:  54.7046783626 }  
+horsepower:7.displacement:3  is a monitor for  horsepower:7.displacement:2             {DELTA:  -15.5726495726 }  
+horsepower:7.displacement:3  is a plan for  horsepower:8             {DELTA:  16.2046783626 }  
+############# SOME STATS #############    
 Number of lines of valid data: 392.0  
 Total execution time: 1.38262796402 seconds ---  
 NOTE: See output.txt in current directory for the valid read data sorted by domination rank.  
