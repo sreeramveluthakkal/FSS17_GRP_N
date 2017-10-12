@@ -33,7 +33,9 @@ __DESCRIPTION__: This is the test case given in the question.
 - using tooFew as 10 as the minimum number of examples needed at each level.  
 - max depth is 3 levels including root node.  
 __OUTPUT__:  
+
 INPUT: python d.py auto.csv 0.2 1 10 3  
+
 err: unexpected data found in line: 179  
 err: unexpected data found in line: 208  
 err: unexpected data found in line: 211  
