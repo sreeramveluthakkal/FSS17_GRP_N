@@ -358,7 +358,8 @@ def datastats(data):
     stddev = float(np.std(ranks,ddof=1))
     return lineCount, mu, stddev
 
-def createRegressionTree(data, headers, treelevel, splitColumns, nodeName,lastSupScore = 0):
+
+def createRegressionTree(data, headers, treelevel, splitColumns, nodeName,nodeMeans,lastSupScore = 0):
     index = 0
     superBins = []
     tooFew = int(sys.argv[4])
@@ -383,7 +384,9 @@ def createRegressionTree(data, headers, treelevel, splitColumns, nodeName,lastSu
     ###############################################################
     if not superBins:
         linec, mu, stddev = datastats(data)
-        print "n=%d mu=%-.2f sd=%-.2f name=%s"%(linec, mu, stddev, '.'.join(nodeName))  
+        name = '.'.join(nodeName)
+        print "n=%d mu=%-.2f sd=%-.2f name=%s"%(linec, mu, stddev, name) 
+        nodeMeans.append([name,mu])
         return
     print '\n',
     if (treelevel>0):
@@ -395,17 +398,34 @@ def createRegressionTree(data, headers, treelevel, splitColumns, nodeName,lastSu
     temp = splitColumns[:]
     for i,currBin in enumerate(superBins):
         splitColumns = temp[:]
-        linec, mu, stddev = datastats(currBin[:len(currBin)-1])
+        # linec, mu, stddev = datastats(currBin[:len(currBin)-1])
         # print '|'*(treelevel-1)+headers[index]["name"]+'='+str(currBin[-1])+'\t','MEAN: ',mu,'\t',
-        print '|'*(treelevel-1)+headers[index]["name"]+' = '+str(currBin[-1])+'\t\t:\t\t',
+        print '|'*(treelevel-1)+headers[index]["name"]+':'+str(currBin[-1])+'\t\t:\t\t',
         # leafstats = 
-        nodeName += [headers[index]["name"]+' = '+str(currBin[-1])]
-        createRegressionTree(currBin[:len(currBin)-1], headers, treelevel, splitColumns,nodeName, domScore)
+        nodeName += [headers[index]["name"]+':'+str(currBin[-1])]
+        createRegressionTree(currBin[:len(currBin)-1], headers, treelevel, splitColumns,nodeName,nodeMeans, domScore)
         nodeName = nodeName[:-(len(superBins)-1)]
         # if not leafstats:
         #     print leafstats
         # for p in splitColumns: print '##',p
     
+
+def printDeltas(data):
+    print '\n\n\n\nCONTRAST SETS: \n'
+    visitedDeltas = set()
+    i = 0
+    for x_index, x in enumerate(data):
+        for y_index, y in enumerate(data):
+            if x_index != y_index and (x_index, y_index) not in visitedDeltas:
+                i = i+1
+                visitedDeltas.add((x_index, y_index))
+                visitedDeltas.add((y_index, x_index))
+                delta = x[1] - y[1]
+                if delta > 0:
+                    print x[0],' is a plan for ',y[0], '            {DELTA: ',delta,'}'
+                else:
+                    print x[0],' is a monitor for ',y[0],'            {DELTA: ',delta,'}'
+
 
 ## Running the script
 if len(sys.argv) < 6:
@@ -415,7 +435,6 @@ if len(sys.argv) < 6:
 else:
     # Running the parser
     start_time = time.time()
-
     results = parse(sys.argv[1])
     data = results['data']
     headers = results['headers']
@@ -425,8 +444,9 @@ else:
     linecount, mu, stddev = datastats(data)
     print "in=%d mu=%-.2f sd=%-.2f"%(lineCount, mu, stddev),
     # print "in=%s mu=%-.2f sd=%-.2f"%(lineCount, (lineCount-1)/2, math.sqrt(((lineCount**2)-1)/12)) #TODO check stddev
-    createRegressionTree(data, headers, 0,[],[])
-
+    nodeMeans = []
+    createRegressionTree(data, headers, 0,[],[],nodeMeans)
+    printDeltas(nodeMeans)
     print '\n\n\n############# SOME STATS #############'
     print 'Number of lines of valid data:', lineCount
     print ("Total execution time: %s seconds ---" % (time.time() - start_time))
