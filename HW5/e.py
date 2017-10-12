@@ -397,9 +397,9 @@ def createRegressionTree(data, headers, treelevel, splitColumns, nodeName,lastSu
         splitColumns = temp[:]
         linec, mu, stddev = datastats(currBin[:len(currBin)-1])
         # print '|'*(treelevel-1)+headers[index]["name"]+'='+str(currBin[-1])+'\t','MEAN: ',mu,'\t',
-        print '|'*(treelevel-1)+headers[index]["name"]+'='+str(currBin[-1])+'\t\t:\t\t',
+        print '|'*(treelevel-1)+headers[index]["name"]+' = '+str(currBin[-1])+'\t\t:\t\t',
         # leafstats = 
-        nodeName += [headers[index]["name"]]
+        nodeName += [headers[index]["name"]+' = '+str(currBin[-1])]
         createRegressionTree(currBin[:len(currBin)-1], headers, treelevel, splitColumns,nodeName, domScore)
         nodeName = nodeName[:-(len(superBins)-1)]
         # if not leafstats:
