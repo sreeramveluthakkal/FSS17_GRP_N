@@ -1,0 +1,15 @@
+NOTES:
+
+FFT Philips - http://journal.sjdm.org/17/17217/jdm17217.pdf
+
+Stats - https://txt.github.io/fss17/stats
+Smote - https://txt.github.io/fss17/lect02
+
+Popt Weifu - https://arxiv.org/pdf/1703.00132.pdf
+https://github.com/WeiFoo/RevisitUnsupervised
+
+Metric Descriptions - http://gromit.iiar.pwr.wroc.pl/p_inf/ckjm/metric.html
+Data - https://zenodo.org/record/322455#.Wg4JmBNSwsn
+
+FUTURE ENHANCEMENTS
+https://txt.github.io/fss17/de.html
