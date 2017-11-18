@@ -1,5 +1,7 @@
 NOTES:
 
+SLIDES - tiny.cc/grp_n_slides
+
 FFT Philips - http://journal.sjdm.org/17/17217/jdm17217.pdf
 
 Stats - https://txt.github.io/fss17/stats
@@ -10,6 +12,24 @@ https://github.com/WeiFoo/RevisitUnsupervised
 
 Metric Descriptions - http://gromit.iiar.pwr.wroc.pl/p_inf/ckjm/metric.html
 Data - https://zenodo.org/record/322455#.Wg4JmBNSwsn
+Better Data better than Miners - https://arxiv.org/pdf/1705.03697.pdf
+
+Imbalanced learn - https://github.com/scikit-learn-contrib/imbalanced-learn
+IMAGES
+https://github.com/txt/fss17/raw/master/img/ckMetrics.png
 
 FUTURE ENHANCEMENTS
 https://txt.github.io/fss17/de.html
+
+
+DEPENDENCIES
+numpy (>=1.8.2)
+scipy (>=0.13.3)
+scikit-learn (>=0.19.0)
+imbalanced-learn (0.3.0)
+
+curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py
+python get-pip.py
+python -m pip install --user numpy scipy
+pip install -U scikit-learn
+pip install -U imbalanced-learn
