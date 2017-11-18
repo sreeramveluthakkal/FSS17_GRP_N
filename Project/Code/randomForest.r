@@ -28,7 +28,7 @@ write.csv(test, file = paste('../Results/', toString(n), "_testing.csv", sep="")
 model <- randomForest(formula = factor(bug) ~ wmc+dit+noc+cbo+rfc+lcom+ca+ce+npm+lcom3+loc+moa+mfa+cam+ic+cbm+amc+max_cc+avg_cc,
                         data = train,                
                         test = test,
-                        ntree=1000,
+                        ntree=5000,
                         nodesize=25,
                         main = "Bug Detector",          
                         decision.labels = c("No Bug", "Bug"),
