@@ -1,5 +1,5 @@
 #Load Data
-df <- read.csv(file="data2.csv", header=TRUE, sep=",")
+df <- read.csv(file="/Users/aswinak/Documents/CSC591/FinalProject/FSS17_GRP_N/Project/Data/velocity_m.csv", header=TRUE, sep=",")
 #Remove unnecessary columns
 df2<- df[-c(1,2,3)]
 
