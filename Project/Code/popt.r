@@ -1,31 +1,6 @@
-#Load Data
-df <- read.csv(file="/Users/aswinak/Documents/CSC591/FinalProject/FSS17_GRP_N/Project/Data/velocity_m.csv", header=TRUE, sep=",")
-#Remove unnecessary columns
-df2<- df[-c(1,2,3)]
-
-train_size <- floor(0.8 * nrow(df2))
-#Split first set to test and train data
-set1 <- df2[1:train_size,]  # for training
-set2 <- df2[(train_size+1):nrow(df2),]  # for testing
-
-#Map 0/1 to TRUE/FALSE in the bug field
-#set2$bug<- set2$bug>0
-
-
-#Randomize test set to test/train sections
-smp_size <- floor(0.8 * nrow(set1))
-## set the seed to make your partition reproductible
-set.seed(123)
-train_ind <- sample(seq_len(nrow(set1)), size = smp_size)
-train_data <- set1[train_ind, ]
-test_data <- set1[-train_ind, ]
-
-model <- FFTrees(formula = bug ~ wmc + dit + noc +cbo+ rfc+ lcom+ca+ce+npm+lcom3+loc+moa+mfa+cam+ic+cbm+amc+max_cc+avg_cc,         
-                 data = train_data,                
-                 data.test = test_data,         
-                 main = "Bug Detector",          
-                 decision.labels = c("No Bug", "Bug"))
-
+library(FFTrees)
+library(zoo)
+source('fft_common.r')
 
 getAUC<- function(x_axis,y_axis){
   id <- order(x_axis)
@@ -36,7 +11,6 @@ getAUC<- function(x_axis,y_axis){
 get20pcAUC<- function(x_axis,y_axis,cutoff){
   x_axis <- x_axis[1:cutoff]
   y_axis <- y_axis[1:cutoff]
-  print(y_axis)
   id <- order(x_axis)
   sum(diff(x_axis[id])*rollmean(y_axis[id],2))
 }
@@ -47,7 +21,7 @@ getPOPTNormalized <- function(area_optimal, area_model, area_worst){
 
 calculatePOpt<- function(dataSet, model){
   
-  prediction <- predict(model, data = set2)
+  prediction <- predict(model, data = dataSet)
   
   df_optimal <- dataSet[with(dataSet,order(-bug,loc)),]
   opt_x_points <- cumsum(df_optimal$loc) # x: LOC%
@@ -71,10 +45,10 @@ calculatePOpt<- function(dataSet, model){
   wst_x_points[pos_20pc_worst]
   
   prediction_vector <- data.frame("loc" = integer(), "bug" = integer() )
-  for (i in 1: nrow(set2)){
-    prediction_vector[i,] <- c(set2[i,"loc"],if (prediction[i]==TRUE)1 else 0 )
+  for (i in 1: nrow(dataSet)){
+    prediction_vector[i,] <- c(dataSet[i,"loc"],if (prediction[i]==TRUE)1 else 0 )
   }
-  df[with(df,order(-bug,loc)),]
+  #df[with(df,order(-bug,loc)),]
   sorted_prediction_vector <- prediction_vector[with(prediction_vector,order(-bug,loc)),]
   
   predict_x_points <- cumsum(sorted_prediction_vector$loc) # x: LOC%
@@ -98,6 +72,20 @@ calculatePOpt<- function(dataSet, model){
   pOpt <- getPOPTNormalized(area_under_optimal_curve_20pc,area_under_prediction_curve_20pc,area_under_worst_curve_20pc)
 }
 
-pOpt1<- calculatePOpt(set2,model)
+#Load Data
 
-cat("pOpt is ",pOpt1)
+data_size_vector<- c(1000,2000,3000,4000,5000,6000)
+pOpt_vector<-c()
+for(input_size in data_size_vector ){
+  data<- getData("../Data/velocity_m.csv",input_size)
+  train <- data$trainData
+  test <-data$testData
+  model<- trainFFT(train,test)
+  pOpt<- calculatePOpt(test,model)
+  pOpt_vector<-c(pOpt_vector,pOpt)
+}
+
+cat("pOpt vector is ",pOpt_vector)
+
+
+plot(data_size_vector,pOpt_vector,type = "l",xlab = "no of records", ylab = "pOpt")
