@@ -9,7 +9,7 @@ Smote - https://txt.github.io/fss17/lect02
 
 Popt Weifu - https://arxiv.org/pdf/1703.00132.pdf
 https://github.com/WeiFoo/RevisitUnsupervised
-
+https://stats.stackexchange.com/questions/215938/generate-synthetic-data-to-match-sample-data
 Metric Descriptions - http://gromit.iiar.pwr.wroc.pl/p_inf/ckjm/metric.html
 Data - https://zenodo.org/record/322455#.Wg4JmBNSwsn
 Better Data better than Miners - https://arxiv.org/pdf/1705.03697.pdf
@@ -33,3 +33,6 @@ python get-pip.py
 python -m pip install --user numpy scipy
 pip install -U scikit-learn
 pip install -U imbalanced-learn
+
+small effect - cohen's rule, hedge's rule, cliff's delta
+satistically significant - T test, boostrap
