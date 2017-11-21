@@ -6,7 +6,9 @@ args <- commandArgs(TRUE)
 n <- as.integer(args[1])
 
 # Read data
-data<- getData("../Data/velocity.csv",n)
+#  data<- getData("../Data/velocity.csv", "../Data/velocity_m.csv", n)
+data<- getData("../Data/velocity_both.csv",n)
+
 train <- data$trainData
 test <-data$testData
 
@@ -20,9 +22,12 @@ model<- trainFFT(train,test)
 # get prediction for the test set
 prediction <- predict(model, data = test)
 
+# cat('prediction size', length(prediction))
+# cat('test size', nrow(test))
+
 # compare prediction and actual, counting no of hits:
 count <- 0
-for(i in 1:nrow(test)){
+for(i in 1:length(test)){
   if(test[i,"bug"]==prediction[i]){
     count = count +1;
   }
@@ -37,5 +42,5 @@ sink()
 
 # print(model) 
 
-print(count)
-print(object.size(model))
+cat("number of correct prediction", count, "\n")
+cat("model size", object.size(model), "\n")
