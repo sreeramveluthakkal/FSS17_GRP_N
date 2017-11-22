@@ -1,4 +1,5 @@
 library(FFTrees)
+library(randomForest)
 library(zoo)
 
 getData<- function(filename, rows,seed_val){
@@ -29,6 +30,17 @@ trainFFT<- function(test, train){
                    decision.labels = c("No Bug", "Bug"))
 }
 
+trainRF<- function(test, train){
+  model <- randomForest(formula = factor(bug) ~ wmc+dit+noc+cbo+rfc+lcom+ca+ce+npm+lcom3+loc+moa+mfa+cam+ic+cbm+amc+max_cc+avg_cc,
+                        data = train,                
+                        test = test,
+                        ntree=1000,
+                        nodesize=25,
+                        main = "Bug Detector", 
+                        decision.labels = c("No Bug", "Bug"),
+                        importance=TRUE)
+}
+
 
 getAUC<- function(x_axis,y_axis){
   id <- order(x_axis)
@@ -55,16 +67,16 @@ getStats<- function(predicted, actual, num){
   fp<-0
   
   for(i in 1:num){
-    if(predicted[i]==TRUE&& actual[i,"bug"]==1){
+    if((predicted[i]==TRUE||predicted[i]==1)&& actual[i,"bug"]==1){
       tp <- tp + 1
     }
-    if(predicted[i]==FALSE&& actual[i,"bug"]==1){
+    if((predicted[i]==FALSE||predicted[i]==0)&& actual[i,"bug"]==1){
       fn <- fn + 1
     }
-    if(predicted[i]==TRUE&& actual[i,"bug"]==0){
+    if((predicted[i]==TRUE||predicted[i]==1)&& actual[i,"bug"]==0){
       fp <- fp + 1
     }
-    if(predicted[i]==TRUE&& actual[i,"bug"]==0){
+    if((predicted[i]==TRUE||predicted[i]==1)&& actual[i,"bug"]==0){
       fp <- fp + 1
     }
   }
@@ -78,10 +90,10 @@ getStats<- function(predicted, actual, num){
 
 
 
-calculatePOpt<- function(dataSet, model){
+calculatePOpt<- function(dataSet, model_fft, model_rf){
   
-  prediction_result <- predict(model, data = dataSet)
-  
+  prediction_result_fft <- predict(model_fft, data = dataSet)
+  prediction_result_rf <- predict(model_rf, data = dataSet)
   
   df_optimal <- dataSet[with(dataSet,order(-bug,loc)),]
   opt_x_points <- cumsum(df_optimal$loc) # x: LOC%
@@ -104,40 +116,67 @@ calculatePOpt<- function(dataSet, model){
   pos_20pc_worst
   wst_x_points[pos_20pc_worst]
   
-  prediction_vector <- data.frame("loc" = integer(), "bug" = integer() )
+  prediction_vector_fft <- data.frame("loc" = integer(), "bug" = integer() )
   for (i in 1: nrow(dataSet)){
-    prediction_vector[i,] <- c(dataSet[i,"loc"],if (prediction_result[i]==TRUE)1 else 0 )
+    prediction_vector_fft[i,] <- c(dataSet[i,"loc"],if (prediction_result_fft[i]==TRUE)1 else 0 )
+  }
+  
+  prediction_vector_rf <- data.frame("loc" = integer(), "bug" = integer() )
+  for (i in 1: nrow(dataSet)){
+    prediction_vector_rf[i,] <- c(dataSet[i,"loc"],if (prediction_result_rf[i]==1)1 else 0 )
   }
   
   
-  sorted_prediction_vector <- prediction_vector[with(prediction_vector,order(-bug,loc)),]
+  sorted_prediction_vector_fft <- prediction_vector_fft[with(prediction_vector_fft,order(-bug,loc)),]
+  sorted_prediction_vector_rf <- prediction_vector_rf[with(prediction_vector_rf,order(-bug,loc)),]
   
-  predict_x_points <- cumsum(sorted_prediction_vector$loc) # x: LOC%
-  predict_Xs <- predict_x_points/predict_x_points[nrow(sorted_prediction_vector)]
-  predict_y_points <- cumsum(sorted_prediction_vector$bug) # x: LOC%
-  predict_Ys <- predict_y_points/predict_y_points[nrow(sorted_prediction_vector)]
+  predict_x_points_fft <- cumsum(sorted_prediction_vector_fft$loc) # x: LOC%
+  predict_Xs_fft <- predict_x_points_fft/predict_x_points_fft[nrow(sorted_prediction_vector_fft)]
+  predict_y_points_fft <- cumsum(sorted_prediction_vector_fft$bug) # x: LOC%
+  predict_Ys_fft <- predict_y_points_fft/predict_y_points_fft[nrow(sorted_prediction_vector_fft)]
   
-  pos_20pc_predict <- min(which(predict_Xs >= 0.2))
-  cat("predict 20 pc at ",pos_20pc_predict)
-  predict_x_points[pos_20pc_predict]
+  predict_x_points_rf <- cumsum(sorted_prediction_vector_rf$loc) # x: LOC%
+  predict_Xs_rf <- predict_x_points_rf/predict_x_points_rf[nrow(sorted_prediction_vector_rf)]
+  predict_y_points_rf <- cumsum(sorted_prediction_vector_rf$bug) # x: LOC%
+  predict_Ys_rf <- predict_y_points_rf/predict_y_points_rf[nrow(sorted_prediction_vector_rf)]
   
-  stats<- getStats(prediction_result,dataSet,pos_20pc_predict)
-  p<- stats$precision
-  r<-stats$recall
-  a<- stats$accuracy
+  pos_20pc_predict_fft <- min(which(predict_Xs_fft >= 0.2))
+  cat("FFT predict 20 pc at ",pos_20pc_predict_fft)
+  predict_x_points_fft[pos_20pc_predict_fft]
+  
+  pos_20pc_predict_rf <- min(which(predict_Xs_rf >= 0.2))
+  cat("RF predict 20 pc at ",pos_20pc_predict_rf)
+  predict_x_points_rf[pos_20pc_predict_rf]
+  
+  stats_fft <- getStats(prediction_result_fft,dataSet,pos_20pc_predict_fft)
+  stats_rf <- getStats(prediction_result_rf,dataSet,pos_20pc_predict_rf)
+  
+  p_fft<- stats_fft$precision
+  r_fft<-stats_fft$recall
+  a_fft<- stats_fft$accuracy
+  
+  p_rf<- stats_rf$precision
+  r_rf<-stats_rf$recall
+  a_rf<- stats_rf$accuracy
   
   plot(optimal_Xs,optimal_Ys,type="l",xlab = "% code churn", ylab = "% defects detected")
   lines(worst_Xs,worst_Ys,type="l")
-  lines(predict_Xs,predict_Ys,type="l", col = "red")
+  lines(predict_Xs_fft,predict_Ys_fft,type="l", col = "blue")
+  lines(predict_Xs_rf,predict_Ys_rf,type="l", col = "red")
   abline(0,1)
   abline(v=.2)
   
   area_under_optimal_curve_20pc <- get20pcAUC(optimal_Xs, optimal_Ys, pos_20pc_optimal)
-  area_under_prediction_curve_20pc <- get20pcAUC(predict_Xs, predict_Ys, pos_20pc_predict)
   area_under_worst_curve_20pc <- get20pcAUC(worst_Xs, worst_Ys, pos_20pc_worst)
   
-  pOpt <- getPOPTNormalized(area_under_optimal_curve_20pc,area_under_prediction_curve_20pc,area_under_worst_curve_20pc)
-  output<- list("popt" = pOpt, "precision" = p, "recall" = r,"accuracy"= a)
+  area_under_prediction_curve_fft_20pc <- get20pcAUC(predict_Xs_fft, predict_Ys_fft, pos_20pc_predict_fft)
+  area_under_prediction_curve_rf_20pc <- get20pcAUC(predict_Xs_rf, predict_Ys_rf, pos_20pc_predict_rf)
+  
+  pOpt_fft <- getPOPTNormalized(area_under_optimal_curve_20pc,area_under_prediction_curve_fft_20pc,area_under_worst_curve_20pc)
+  pOpt_rf <- getPOPTNormalized(area_under_optimal_curve_20pc,area_under_prediction_curve_rf_20pc,area_under_worst_curve_20pc)
+  
+  output<- list("popt_fft" = pOpt_fft,"precision_fft" = p_fft, "recall_fft" = r_fft,"accuracy_fft"= a_fft,
+                "popt_rf" = pOpt_rf, "precision_rf" = p_rf, "recall_rf" = r_rf,"accuracy_rf"= a_rf)
 }
 
 #Load Data
@@ -157,33 +196,52 @@ accuracyMain<-rep(0,times)
 precissionMain<-rep(0,times)
 
 for(seed in seed_vector ){
-  pOpt_vector<-c()
-  precision_vector<-c()
-  recall_vector<-c()
-  acc_vector<-c()
+  pOpt_vector_fft<-c()
+  precision_vector_fft<-c()
+  recall_vector_fft<-c()
+  acc_vector_fft<-c()
   
+  pOpt_vector_rf<-c()
+  precision_vector_rf<-c()
+  recall_vector_rf<-c()
+  acc_vector_rf<-c()
   for(input_size in data_size_vector ){
+    cat("looping: ",input_size)
     data<- getData("../Data/velocity_m.csv",input_size,seed)
     
     train <- data$trainData
     test <-data$testData
-    model<- trainFFT(train,test)
-    pOpt<- calculatePOpt(test,model)
-    pOpt_vector<-c(pOpt_vector,pOpt$popt)
-    precision_vector<-c(precision_vector,pOpt$precision)
-    recall_vector<-c(recall_vector,pOpt$recall)
-    acc_vector<-c(acc_vector,pOpt$accuracy)
+    model_fft<- trainFFT(train,test)
+    model_rf<- trainRF(train,test)
+    
+    pOpt<- calculatePOpt(test,model_fft,model_rf)
+    
+    pOpt_vector_rf<-c(pOpt_vector_rf,pOpt$popt_rf)
+    precision_vector_rf<-c(precision_vector_rf,pOpt$precision_rf)
+    recall_vector_rf<-c(recall_vector_rf,pOpt$recall_rf)
+    acc_vector_rf<-c(acc_vector_rf,pOpt$accuracy_rf)
+    
+    pOpt_vector_fft<-c(pOpt_vector_fft,pOpt$popt_fft)
+    precision_vector_fft<-c(precision_vector_fft,pOpt$precision_fft)
+    recall_vector_fft<-c(recall_vector_fft,pOpt$recall_fft)
+    acc_vector_fft<-c(acc_vector_fft,pOpt$accuracy_fft)
   }
   
-  cat("pOpt vector is ",pOpt_vector)
-  cat("recall vector is ",recall_vector)
-  cat("precision vector is ",precision_vector)
-  cat("accuracy vector is ",acc_vector)
+  plot(data_size_vector, pOpt_vector_fft,type = "l",xlab = "no of records", ylab = "pOpt",col = 'blue',ylim = c(0,1))
+  lines(data_size_vector, pOpt_vector_rf,type = "l",col='red',ylim = c(0,1))
   
-  plot(data_size_vector,pOpt_vector,type = "l",xlab = "no of records", ylab = "pOpt")
-  #plot(data_size_vector,precision_vector,type = "l",xlab = "no of records", ylab = "PRECISION")
-  #plot(data_size_vector,recall_vector,type = "l",xlab = "no of records", ylab = "RECALL")
-  #plot(data_size_vector,acc_vector,type = "l",xlab = "no of records", ylab = "ACCURACY")
+  plot(data_size_vector, precision_vector_fft,type = "l",xlab = "no of records", ylab = "PRECISION",col = 'blue',ylim = c(0,1))
+  lines(data_size_vector, precision_vector_rf,type = "l",col='red',ylim = c(0,1))
+  
+  plot(data_size_vector, recall_vector_fft,type = "l",xlab = "no of records", ylab = "RECALL",col = 'blue',ylim = c(0,1))
+  lines(data_size_vector, recall_vector_rf,type = "l",col='red',ylim = c(0,1))
+  
+  print("here...")
+  print(acc_vector_fft)
+  print(acc_vector_rf)
+  plot(data_size_vector, acc_vector_fft,type = "l",xlab = "no of records", ylab = "ACC",col = 'blue',ylim = c(0,1))
+  lines(data_size_vector, acc_vector_rf,type = "l",col='red',ylim = c(0,1))
+  
   
   pOptMain<- pOptMain + pOpt_vector
   precissionMain<- precissionMain + precision_vector
@@ -195,14 +253,13 @@ pOptMain <- pOptMain/times
 recallMain <- recallMain/times
 precissionMain <- precissionMain/times
 accuracyMain <- accuracyMain/times
-cat("pOpt mean is ",pOptMain)
 
 f1_main<- (2*precissionMain*recallMain)/(precissionMain + recallMain)
 
-plot(data_size_vector,pOptMain,type = "l",xlab = " # of records ", ylab = "pOpt")
-plot(data_size_vector,recallMain,type = "l",xlab = " # of records ", ylab = "recall")
-plot(data_size_vector,precissionMain,type = "l",xlab = " # of records ", ylab = "precission")
-plot(data_size_vector,accuracyMain,type = "l",xlab = " # of records ", ylab = "accuracy")
-plot(data_size_vector,f1_main,type = "l",xlab = " # of records ", ylab = "F1")
+#plot(data_size_vector,pOptMain,type = "l",xlab = " # of records ", ylab = "pOpt")
+#plot(data_size_vector,recallMain,type = "l",xlab = " # of records ", ylab = "recall")
+#plot(data_size_vector,precissionMain,type = "l",xlab = " # of records ", ylab = "precission")
+#plot(data_size_vector,accuracyMain,type = "l",xlab = " # of records ", ylab = "accuracy")
+#plot(data_size_vector,f1_main,type = "l",xlab = " # of records ", ylab = "F1")
 
 
