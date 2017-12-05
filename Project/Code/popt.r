@@ -16,8 +16,6 @@ getData<- function(filename, rows,seed_val){
   train_ind <- sample(seq_len(nrow(bugs)), size = smp_size)
   train <- bugs[train_ind, ]
   test <- bugs[-train_ind, ]
-  #train <- bugs[1:smp_size, ]
-  #test <- bugs[smp_size+1:rows, ]
   output <- list("trainData" = train, "testData" = test)
 }
 
@@ -183,10 +181,6 @@ calculatePOpt<- function(dataSet, model_fft, model_rf){
 
 data_size_vector<- c(1000,2000,4000,6000,8000)
 
-popt_sum<-0
-recall_sum<-0
-precission_sum<-0
-accuracy_sum<-0
 seed_vector<-c(123)
 times<- length(seed_vector)
 
@@ -227,6 +221,9 @@ for(seed in seed_vector ){
     acc_vector_fft<-c(acc_vector_fft,pOpt$accuracy_fft)
   }
   
+  f1_fft<- (2*precision_vector_fft*recall_vector_fft)/(precision_vector_fft + recall_vector_fft)
+  f1_rf<- (2*precision_vector_rf*recall_vector_rf)/(precision_vector_rf + recall_vector_rf)
+  
   plot(data_size_vector, pOpt_vector_fft,type = "l",xlab = "no of records", ylab = "pOpt",col = 'blue',ylim = c(0,1))
   lines(data_size_vector, pOpt_vector_rf,type = "l",col='red',ylim = c(0,1))
   
@@ -236,12 +233,8 @@ for(seed in seed_vector ){
   plot(data_size_vector, recall_vector_fft,type = "l",xlab = "no of records", ylab = "RECALL",col = 'blue',ylim = c(0,1))
   lines(data_size_vector, recall_vector_rf,type = "l",col='red',ylim = c(0,1))
   
-  print("here...")
-  print(acc_vector_fft)
-  print(acc_vector_rf)
-  plot(data_size_vector, acc_vector_fft,type = "l",xlab = "no of records", ylab = "ACC",col = 'blue',ylim = c(0,1))
-  lines(data_size_vector, acc_vector_rf,type = "l",col='red',ylim = c(0,1))
-  
+  plot(data_size_vector, f1_fft,type = "l",xlab = "no of records", ylab = "F1",col = 'blue',ylim = c(0,1))
+  lines(data_size_vector, f1_rf,type = "l",col='red',ylim = c(0,1))
   
   pOptMain<- pOptMain + pOpt_vector
   precissionMain<- precissionMain + precision_vector
