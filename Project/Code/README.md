@@ -17,3 +17,9 @@ Data:
 All our data are from the SeaCraft repository (Open Access):
 https://zenodo.org/communities/seacraft
 
+
+
+References:
+
+The code in popt.r is based on work done by Wei Foo:
+https://github.com/WeiFoo/RevisitUnsupervised
