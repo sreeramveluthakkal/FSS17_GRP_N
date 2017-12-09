@@ -2,7 +2,7 @@ library(FFTrees)
 library(randomForest)
 library(zoo)
 
-getData<- function(filename, rows,seed_val){
+getData2<- function(filename, rows,seed_val){
   bugs<- read.csv(file=filename, header=TRUE, sep=",", nrows=rows)
   #Remove unnecessary columns
   set.seed(seed_val)
@@ -16,6 +16,15 @@ getData<- function(filename, rows,seed_val){
   train_ind <- sample(seq_len(nrow(bugs)), size = smp_size)
   train <- bugs[train_ind, ]
   test <- bugs[-train_ind, ]
+  output <- list("trainData" = train, "testData" = test)
+}
+
+getData<- function(filename, rows,seed_val){
+  train<- read.csv(file="../Data/velocity_m.csv", header=TRUE, sep=",", nrows=rows)
+  test<-  read.csv(file="../Data/velocity.csv", header=TRUE, sep=",",nrows=rows)
+  for (i in 1: nrow(test)){
+    test[i,"bug"] <- if (test[i,"bug"]==0)0 else 1 
+  }
   output <- list("trainData" = train, "testData" = test)
 }
 
@@ -241,13 +250,32 @@ for(seed in seed_vector ){
   accuracyMain<- accuracyMain + acc_vector
   recallMain<- recallMain + recall_vector
 }
-cat("pOpt main is ",pOptMain)
+
+cat("pOpt RF is ",pOpt_vector_rf)
+cat("pOpt FFT is ",pOpt_vector_fft)
+cat("prec RF is ",precision_vector_rf)
+cat("pOpt FFT is ",precision_vector_fft)
+cat("recall RF is ",recall_vector_rf)
+cat("recall FFT is ",recall_vector_fft)
+cat("F1 RF is ",f1_rf)
+cat("F1 FFT is ",f1_fft)
+
+#cat("mean pOpt RF is ",mean(pOpt_vector_rf))
+#cat("mean pOpt FFT is ",mean(pOpt_vector_fft))
+#cat("mean prec RF is ",mean(precision_vector_rf))
+#cat("mean pOpt FFT is ",mean(precision_vector_fft))
+#cat("mean recall RF is ",mean(recall_vector_rf))
+#cat("mean recall FFT is ",mean(recall_vector_fft))
+#cat("mean F1 RF is ",mean(f1_rf))
+#cat("mean F1 FFT is ",mean(f1_fft))
+
 pOptMain <- pOptMain/times
 recallMain <- recallMain/times
 precissionMain <- precissionMain/times
 accuracyMain <- accuracyMain/times
 
 f1_main<- (2*precissionMain*recallMain)/(precissionMain + recallMain)
+
 
 #plot(data_size_vector,pOptMain,type = "l",xlab = " # of records ", ylab = "pOpt")
 #plot(data_size_vector,recallMain,type = "l",xlab = " # of records ", ylab = "recall")
