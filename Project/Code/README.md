@@ -11,3 +11,9 @@ Sreeram Veluthakkal
 - Run ./benchmark.sh to run all the scripts and write output to /Results
 
 - `requirement.r` is the dependencies of our R scripts
+
+
+Data:
+All our data are from the SeaCraft repository (Open Access):
+https://zenodo.org/communities/seacraft
+
