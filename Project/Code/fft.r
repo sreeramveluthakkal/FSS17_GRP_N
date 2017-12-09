@@ -4,17 +4,18 @@ library(FFTrees)
 source('fft_common.r')
 args <- commandArgs(TRUE)
 n <- as.integer(args[1])
+dataset_name <- args[2]
 
 # Read data
 #  data<- getData("../Data/velocity.csv", "../Data/velocity_m.csv", n)
-data<- getData("../Data/velocity_both.csv",n)
+data<- getData(paste("../Data/", dataset_name, "_m.csv", sep=""), n)
 
 train <- data$trainData
 test <-data$testData
 
 # Saving the training and testing set to file:
-write.csv(train, file = paste('../Results/', toString(n), "_training.csv", sep=""))
-write.csv(test, file = paste('../Results/', toString(n), "_testing.csv", sep=""))
+write.csv(train, file = paste('../Results/', dataset_name, "_", toString(n), "_training.csv", sep=""))
+write.csv(test, file = paste('../Results/', dataset_name, "_", toString(n), "_testing.csv", sep=""))
 
 # train the model
 model<- trainFFT(train,test)
@@ -36,7 +37,7 @@ for(i in 1:length(test)){
 #View the fft results.
 
 # saving model to file
-sink(paste('../Results/', toString(n), "_fft.txt", sep=""))
+sink(paste('../Results/', dataset_name, "_", toString(n), "_fft.txt", sep=""))
 print(model)
 sink()
 

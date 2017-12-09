@@ -16,10 +16,10 @@ getData<- function(file1, rows){
     train <- bugs[1:train_ind, ]
     test <- bugs[(train_ind+1):rows, ]
 
-    cat('train_ind', train_ind, "rows", rows )
+    # cat('train_ind', train_ind, "rows", rows )
 
-    cat("train: ",nrow(train), "\n")
-    cat("test: ",nrow(test), "\n")
+    # cat("train: ",nrow(train), "\n")
+    # cat("test: ",nrow(test), "\n")
     output <- list("trainData" = train, "testData" = test)
 }
 
